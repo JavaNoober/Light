@@ -23,12 +23,12 @@ android {
         }
     }
 
-//    sourceSets {
-//        main {
-//            jniLibs.srcDirs = ['libs']
-//            jni.srcDirs = []
-//        }
-//    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/libs']
+            jni.srcDirs = []
+        }
+    }
 
 }
 
