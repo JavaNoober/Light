@@ -74,17 +74,18 @@ int generateJPEG(BYTE* data, int w, int h, int quality,
 	     }
 	jpeg_create_compress(&jcs);
 	FILE* f = fopen(outfilename, "wb");
+
 	if (f == NULL) {
 		return 0;
 	}
 	jpeg_stdio_dest(&jcs, f);
 	jcs.image_width = w;
 	jcs.image_height = h;
-	if (optimize) {
-		LOGI("optimize==ture");
-	} else {
-		LOGI("optimize==false");
-	}
+//	if (optimize) {
+//		LOGI("optimize==ture");
+//	} else {
+//		LOGI("optimize==false");
+//	}
 
 	jcs.arith_code = false;
 	jcs.input_components = nComponent;
@@ -108,11 +109,11 @@ int generateJPEG(BYTE* data, int w, int h, int quality,
 		jpeg_write_scanlines(&jcs, row_pointer, 1);
 	}
 
-	if (jcs.optimize_coding) {
-			LOGI("optimize==ture");
-		} else {
-			LOGI("optimize==false");
-		}
+//	if (jcs.optimize_coding) {
+//			LOGI("optimize==ture");
+//		} else {
+//			LOGI("optimize==false");
+//		}
 	jpeg_finish_compress(&jcs);
 	jpeg_destroy_compress(&jcs);
 	fclose(f);
@@ -149,7 +150,6 @@ jbyteArray stoJstring(JNIEnv* env, const char* pat,int len) {
 jboolean Java_com_light_compress_LightCompressCore_compressBitmap(JNIEnv* env,
 		jobject thiz, jobject bitmapcolor, int w, int h, int quality,
 		jbyteArray fileNameStr, jboolean optimize) {
-    LOGI("start");
 	AndroidBitmapInfo infocolor;
 	BYTE* pixelscolor;
 	int ret;
@@ -157,14 +157,12 @@ jboolean Java_com_light_compress_LightCompressCore_compressBitmap(JNIEnv* env,
 	BYTE *tmpdata;
 	char * fileName = jstrinTostring(env, fileNameStr);
 	if ((ret = AndroidBitmap_getInfo(env, bitmapcolor, &infocolor)) < 0) {
-	  LOGI("error");
 		LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
 		return (*env)->NewStringUTF(env, "0");;
 	}
 	if ((ret = AndroidBitmap_lockPixels(env, bitmapcolor, &pixelscolor)) < 0) {
 		LOGE("AndroidBitmap_lockPixels() failed ! error=%d", ret);
 	}
-
 	BYTE r, g, b;
 	data = NULL;
 	data = malloc(w * h * 3);

@@ -34,11 +34,12 @@ public class MainActivity extends AppCompatActivity {
 		config.setMaxWidth(1024);
 		Light.getInstance(this).setConfig(config);
 
-		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
 		Log.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节");
 		try {
-			String pathRoot = Environment.getExternalStorageDirectory().getCanonicalPath()+"/222.jpg";
-			Log.e("MemorySize", ImageUtils.compressBitmap(bitmap, pathRoot));
+			String pathRoot = Environment.getExternalStorageDirectory().getCanonicalPath()+"/test_1920_1200_a.jpg";
+			String pathRoot2 = Environment.getExternalStorageDirectory().getCanonicalPath()+"/test_1920_1200_o.jpg";
+			ImageUtils.compressBitmap(bitmap, pathRoot2);
 			boolean b = new LightCompressEngine(Light.getInstance(this)).compress2File(bitmap, pathRoot);
 			Log.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节" + b);
 		} catch (IOException e) {
