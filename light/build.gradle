@@ -11,7 +11,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        ndk {
+            abiFilters "armeabi","armeabi-v7a"
+        }
     }
 
     buildTypes {
@@ -21,12 +23,12 @@ android {
         }
     }
 
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-            jni.srcDirs = []
-        }
-    }
+//    sourceSets {
+//        main {
+//            jniLibs.srcDirs = ['libs']
+//            jni.srcDirs = []
+//        }
+//    }
 
 }
 

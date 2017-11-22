@@ -1,7 +1,5 @@
 package com.light.body;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.io.Serializable;
 
@@ -17,6 +15,9 @@ public class LightConfig implements Serializable{
 
 	private String outputRootDir;
 
+	private int maxWidth;
+
+	private int maxHeight;
 
 	public LightConfig setMaxFileSize(int maxFileSize) {
 		this.maxFileSize = maxFileSize;
@@ -34,5 +35,21 @@ public class LightConfig implements Serializable{
 
 	public String getOutputRootDir() {
 		return outputRootDir;
+	}
+
+	public int getMaxWidth() {
+		return maxWidth;
+	}
+
+	public int getMaxHeight() {
+		return maxHeight;
+	}
+
+	public void setMaxWidth(int maxWidth) {
+		this.maxWidth = maxWidth;
+	}
+
+	public void setMaxHeight(int maxHeight) {
+		this.maxHeight = maxHeight;
 	}
 }
