@@ -81,4 +81,8 @@ public class Light {
 	public static boolean compress(){
 		return true;
 	}
+
+	public Context getContext() {
+		return context;
+	}
 }

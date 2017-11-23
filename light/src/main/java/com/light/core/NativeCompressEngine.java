@@ -1,6 +1,7 @@
 package com.light.core;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -19,7 +20,7 @@ import java.io.InputStream;
 
 public class NativeCompressEngine implements ICompressEngine {
 	@Override
-	public Bitmap compress2Bitmap(Bitmap bitmap) {
+	public Bitmap compress2Bitmap(Context context, Bitmap bitmap) {
 		return null;
 	}
 

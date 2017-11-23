@@ -1,5 +1,6 @@
 package com.light.core;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -13,6 +14,7 @@ import com.light.core.callback.ICompressEngine;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * Created by xiaoqi on 2017/11/21.
@@ -30,18 +32,29 @@ public class LightCompressEngine implements ICompressEngine{
 		lightConfig = light.getConfig();
 	}
 
-	public Bitmap compress2Bitmap(Bitmap bitmap){
+	public Bitmap compress2Bitmap(Context context, Bitmap bitmap){
+		String temp = context.getApplicationContext().getCacheDir().getAbsolutePath()
+				+ UUID.randomUUID().toString() + ".jpg";
+		Bitmap resultBitmap;
+		if(compress2File(bitmap, temp)){
+			resultBitmap = BitmapFactory.decodeFile(temp);
+
+		}
 		return null;
 	}
 
 
 	public boolean compress2File(Bitmap bitmap, String outputPath){
-		int width = bitmap.getWidth();
-		int height = bitmap.getHeight();
+		return compress2File(bitmap, outputPath, lightConfig.getMaxWidth(), lightConfig.getMaxHeight());
+	}
+
+	public boolean compress2File(Bitmap bitmap, String outputPath, int width, int height){
+		int bitmapWidth = bitmap.getWidth();
+		int bitmapHeight = bitmap.getHeight();
 		float scale = 1;
-		if(width > lightConfig.getMaxWidth() || height > lightConfig.getMaxHeight()){
-			float widthScale = (float) lightConfig.getMaxWidth() / width;
-			float heightScale = (float) lightConfig.getMaxHeight() / height;
+		if(bitmapWidth > width || bitmapHeight > height){
+			float widthScale = (float) width / bitmapWidth;
+			float heightScale = (float) height / bitmapHeight;
 			scale = Math.min(widthScale, heightScale);
 		}
 		if(scale < 1){

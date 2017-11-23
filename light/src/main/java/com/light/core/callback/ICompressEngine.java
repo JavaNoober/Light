@@ -1,5 +1,6 @@
 package com.light.core.callback;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 /**
@@ -8,7 +9,7 @@ import android.graphics.Bitmap;
 
 public interface ICompressEngine {
 
-	Bitmap compress2Bitmap(Bitmap bitmap);
+	Bitmap compress2Bitmap(Context context, Bitmap bitmap);
 
 	boolean compress2File(Bitmap bitmap, String outputPath);
 }
