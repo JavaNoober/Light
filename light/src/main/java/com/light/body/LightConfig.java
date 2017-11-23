@@ -11,7 +11,7 @@ public class LightConfig implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private int maxFileSize;
+	private int maxFileSize = -1;
 
 	private String outputRootDir;
 

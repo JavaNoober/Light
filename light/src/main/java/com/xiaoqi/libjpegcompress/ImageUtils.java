@@ -60,11 +60,12 @@ public class ImageUtils {
 		int quality = 95;
 		int size = getBitmapSize(bitmap);
 		if (size > 100 * 1024){
-			Log.i("LIBJPEG","compress by libjpeg");
+
 			if("1".equals(compressBitmap(bitmap,quality, fileName))){
 				File file = new File(fileName);
 				if(file.exists() && file.isFile()){
 					long newFileSize = file.length();
+					Log.i("MemorySize","newFileSize" + newFileSize);
 					while (newFileSize > 100 * 1024 && quality > 0){
 						Log.i("LIBJPEG","compress newFileSize");
 						if( newFileSize > 1000 * 1024){

@@ -46,31 +46,11 @@ public class LightCompressEngine implements ICompressEngine{
 		}
 		if(scale < 1){
 			Log.e("scale", scale+"");
-//			Bitmap result = new MatrixUtil.Build().scale(scale, scale).bitmap(bitmap).build();
-			return LightCompressCore.compressBitmap(compressImageFromPath(bitmap, 1024, 1024), outputPath);
+			Bitmap result = new MatrixUtil.Build().scale(scale, scale).bitmap(bitmap).build();
+			return LightCompressCore.compressBitmap(result, outputPath.replace("test", "test2"));
 		}else {
 			return LightCompressCore.compressBitmap(bitmap, outputPath);
 		}
 	}
 
-	public Bitmap compressImageFromPath(Bitmap bitmap, int pixelW, int pixelH) {
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		// 开始读入图片，此时把options.inJustDecodeBounds 设回true，即只读边不读内容
-		options.inJustDecodeBounds = true;
-		options.inPreferredConfig = Bitmap.Config.RGB_565;
-//		BitmapFactory.decodeFile(imgPath,options);
-		BitmapFactory.decodeStream(bitmap2InputSream(bitmap),null, options);
-		options.inJustDecodeBounds = false;
-		options.inSampleSize = SimpleSizeCompute.computeSampleSize(options , pixelH > pixelW ? pixelH : pixelW ,
-				pixelW * pixelH );
-		Bitmap bitmap2 = BitmapFactory.decodeStream(bitmap2InputSream(bitmap),null, options);
-		return bitmap2;
-	}
-
-	private InputStream bitmap2InputSream(Bitmap bitmap){
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-		InputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-		return  isBm;
-	}
 }

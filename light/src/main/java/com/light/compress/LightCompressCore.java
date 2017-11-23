@@ -14,7 +14,6 @@ public class LightCompressCore {
 	static {
 		System.loadLibrary("jpegbither");
 		System.loadLibrary("light");
-		Log.e("LightCompressCore", "LightCompressCore");
 	}
 
 	private final static int DEFAULT_QUALITY = 95;
@@ -24,34 +23,30 @@ public class LightCompressCore {
 	}
 
 	public static boolean compressBitmap(Bitmap bit, int quality, String fileName) {
-//		Bitmap.Config config = bit.getConfig();
-//		if(config.equals(Bitmap.Config.ARGB_8888)){
-//			return saveBitmap(bit, quality, fileName);
-//		}else {
-//			Bitmap result = null;
-//			try {
-//				result = Bitmap.createBitmap(bit.getWidth(), bit.getHeight(), Bitmap.Config.ARGB_8888);
-//				Canvas canvas = new Canvas(result);
-//				Rect rect = new Rect(0, 0, bit.getWidth(), bit.getHeight());
-//				canvas.drawBitmap(bit, null, rect, null);
-//				return saveBitmap(result, quality, fileName);
-//			}finally {
-//				if(result != null){
-//					result.recycle();
-//				}
-//			}
-//		}
+		long startTime = System.currentTimeMillis();
+		Bitmap.Config config = bit.getConfig();
+		if(config.equals(Bitmap.Config.ARGB_8888)){
+			try {
+				return saveBitmap(bit, quality, fileName);
+			}finally {
+				long time = System.currentTimeMillis() - startTime;
+				Log.e("MemorySize", "耗时:" + time);
+			}
 
-		Bitmap result = null;
-		try {
-			result = Bitmap.createBitmap(bit.getWidth(), bit.getHeight(), Bitmap.Config.ARGB_8888);
-			Canvas canvas = new Canvas(result);
-			Rect rect = new Rect(0, 0, bit.getWidth(), bit.getHeight());
-			canvas.drawBitmap(bit, null, rect, null);
-			return saveBitmap(result, quality, fileName);
-		}finally {
-			if(result != null){
-				result.recycle();
+		}else {
+			Bitmap result = null;
+			try {
+				result = Bitmap.createBitmap(bit.getWidth(), bit.getHeight(), Bitmap.Config.ARGB_8888);
+				Canvas canvas = new Canvas(result);
+				Rect rect = new Rect(0, 0, bit.getWidth(), bit.getHeight());
+				canvas.drawBitmap(bit, null, rect, null);
+				return saveBitmap(result, quality, fileName);
+			}finally {
+				long time = System.currentTimeMillis() - startTime;
+				if(result != null){
+					result.recycle();
+					Log.e("MemorySize", "耗时:" + time);
+				}
 			}
 		}
 	}
