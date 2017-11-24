@@ -16,7 +16,7 @@ public class LightCompressCore {
 		System.loadLibrary("light");
 	}
 
-	private final static int DEFAULT_QUALITY = 95;
+	private final static int DEFAULT_QUALITY = 85;
 
 	public static boolean compressBitmap(Bitmap bit, String fileName) {
 		return compressBitmap(bit, DEFAULT_QUALITY, fileName);
@@ -30,7 +30,7 @@ public class LightCompressCore {
 				return saveBitmap(bit, quality, fileName);
 			}finally {
 				long time = System.currentTimeMillis() - startTime;
-				Log.e("MemorySize", "耗时:" + time);
+				Log.e("Light", "JNI耗时:" + time);
 			}
 
 		}else {
@@ -45,7 +45,7 @@ public class LightCompressCore {
 				long time = System.currentTimeMillis() - startTime;
 				if(result != null){
 					result.recycle();
-					Log.e("MemorySize", "耗时:" + time);
+					Log.e("Light", "JNI耗时:" + time);
 				}
 			}
 		}

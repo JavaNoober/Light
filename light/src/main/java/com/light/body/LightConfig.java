@@ -11,13 +11,15 @@ public class LightConfig implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private int maxFileSize = -1;
+	private int maxFileSize = 500;
 
 	private String outputRootDir;
 
 	private int maxWidth;
 
 	private int maxHeight;
+
+	private int defaultQuality = 85;
 
 	public LightConfig setMaxFileSize(int maxFileSize) {
 		this.maxFileSize = maxFileSize;
@@ -51,5 +53,13 @@ public class LightConfig implements Serializable{
 
 	public void setMaxHeight(int maxHeight) {
 		this.maxHeight = maxHeight;
+	}
+
+	public int getDefaultQuality() {
+		return defaultQuality;
+	}
+
+	public void setDefaultQuality(int defaultQuality) {
+		this.defaultQuality = defaultQuality;
 	}
 }
