@@ -3,26 +3,27 @@ package com.light.core;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.compress.LightCompressCore;
+import com.light.core.Utils.MatrixUtil;
 import com.light.core.Utils.SimpleSizeCompute;
-import com.light.core.callback.ICompressEngine;
-import com.light.core.callback.OnCompressFinishListener;
+import com.light.core.listener.ICompressEngine;
+import com.light.core.listener.OnCompressFinishListener;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -36,25 +37,22 @@ public class LightCompressEngine implements ICompressEngine{
 
 	private LightConfig lightConfig;
 
-	public LightCompressEngine(Light light){
-		lightConfig = light.getConfig();
+	public LightCompressEngine(LightConfig lightConfig){
+		this.lightConfig = lightConfig;
 	}
 
 	@Nullable
-	@Override
 	public Bitmap compress2Bitmap(Context context, Bitmap bitmap){
 		int defaultQuality = lightConfig.getDefaultQuality();
 		return compress2Bitmap(context, bitmap, defaultQuality);
 	}
 
 	@Nullable
-	@Override
 	public Bitmap compress2Bitmap(Context context, Bitmap bitmap, int quality) {
 		return compress2Bitmap(context, bitmap, quality, lightConfig.getMaxWidth(), lightConfig.getMaxHeight());
 	}
 
 	@Nullable
-	@Override
 	public Bitmap compress2Bitmap(Context context, Bitmap bitmap, int width, int height){
 		int defaultQuality = lightConfig.getDefaultQuality();
 		return compress2Bitmap(context, bitmap, defaultQuality, width,  height);
@@ -67,7 +65,7 @@ public class LightCompressEngine implements ICompressEngine{
 				+ UUID.randomUUID().toString() + ".jpg";
 		Bitmap resultBitmap = null;
 		if(compress2File(bitmap, temp, quality)){
-			resultBitmap = BitmapUtil.compressImageFromPath(temp, width, height);
+			resultBitmap = compress2Bitmap(temp, width, height);
 			new File(temp).delete();
 		}
 		return resultBitmap;
@@ -76,21 +74,18 @@ public class LightCompressEngine implements ICompressEngine{
 	@Nullable
 	@Override
 	public Bitmap compress2Bitmap(String imagePath, int width, int height){
-		return BitmapUtil.compressImageFromPath(imagePath, width, height);
+		return compress2Bitmap(imagePath, width, height);
 	}
 
-	@Override
 	public boolean compress2File(Bitmap bitmap, String outputPath){
 		int defaultQuality = lightConfig.getDefaultQuality();
 		return compress2File(bitmap, outputPath, defaultQuality, lightConfig.getMaxWidth(), lightConfig.getMaxHeight());
 	}
 
-	@Override
 	public boolean compress2File(Bitmap bitmap, String outputPath, int quality) {
 		return compress2File(bitmap, outputPath, quality, lightConfig.getMaxWidth(), lightConfig.getMaxHeight());
 	}
 
-	@Override
 	public boolean compress2File(Bitmap bitmap, String outputPath, int width, int height){
 		int defaultQuality = lightConfig.getDefaultQuality();
 		return compress2File(bitmap, outputPath, defaultQuality, width, height);
@@ -101,12 +96,7 @@ public class LightCompressEngine implements ICompressEngine{
 	public boolean compress2File(Bitmap bitmap, String outputPath, int quality, int width, int height) {
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
-		float scale = 1;
-		if((width > 0 || height > 0) && (bitmapWidth > width || bitmapHeight > height)){
-			float widthScale = (float) width / bitmapWidth;
-			float heightScale = (float) height / bitmapHeight;
-			scale = Math.min(widthScale, heightScale);
-		}
+		float scale = MatrixUtil.getScale(width, height, bitmapWidth, bitmapHeight);
 		if(scale < 1){
 			Log.e("Light", "scale:"+ scale);
 			Bitmap result = new MatrixUtil.Build().scale(scale, scale).bitmap(bitmap).build();
@@ -116,7 +106,6 @@ public class LightCompressEngine implements ICompressEngine{
 		}
 	}
 
-	@Override
 	public void compress(List<String> pathList, String outputPath, int fileSize,
 	                     final OnCompressFinishListener listener) {
 		Observable.fromIterable(pathList)
@@ -143,6 +132,67 @@ public class LightCompressEngine implements ICompressEngine{
 						}
 					}
 				});
+	}
+
+	public Bitmap compress2Bitmap(Bitmap bitmap, int width, int height) {
+		long start = System.currentTimeMillis();
+		try {
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			options.inPreferredConfig = Bitmap.Config.RGB_565;
+			BitmapFactory.decodeStream(bitmap2InputStream(bitmap),null, options);
+			options.inJustDecodeBounds = false;
+			options.inSampleSize = SimpleSizeCompute.computeSampleSize(options , Math.max(width, height),
+					width * height);
+			Log.e("MemorySize", options.inSampleSize + "");
+			return BitmapFactory.decodeStream(bitmap2InputStream(bitmap),null, options);
+		}finally {
+			Log.e("MemorySize", "耗时："+ (System.currentTimeMillis() - start));
+		}
+	}
+
+	public Bitmap compress2Bitmap(int resId, int width, int height) {
+
+		long start = System.currentTimeMillis();
+		try {
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			options.inPreferredConfig = Bitmap.Config.RGB_565;
+			BitmapFactory.decodeResource(Light.getInstance().getResources(),resId,options);
+			options.inJustDecodeBounds = false;
+			options.inPurgeable = true;
+			options.inInputShareable = true;
+			options.inSampleSize = SimpleSizeCompute.computeSampleSize(options , Math.max(width, height),
+					width * height);
+			InputStream is = Light.getInstance().getResources().openRawResource(resId);
+			return BitmapFactory.decodeStream(is,null,options);
+		}finally {
+			Log.e("MemorySize", "耗时："+ (System.currentTimeMillis() - start));
+		}
+	}
+
+	public Bitmap compressImageFromPath(String path, int pixelW, int pixelH) {
+		long start = System.currentTimeMillis();
+		try {
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			options.inPreferredConfig = Bitmap.Config.RGB_565;
+			BitmapFactory.decodeFile(path,options);
+			options.inJustDecodeBounds = false;
+			options.inSampleSize = SimpleSizeCompute.computeSampleSize(options , pixelH > pixelW ? pixelH : pixelW ,
+					pixelW * pixelH );
+			Log.e("MemorySize", options.inSampleSize + "");
+			return BitmapFactory.decodeFile(path, options);
+		}finally {
+			Log.e("MemorySize", "耗时："+ (System.currentTimeMillis() - start));
+		}
+
+	}
+
+	private InputStream bitmap2InputStream(Bitmap bitmap){
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, baos);
+		return new ByteArrayInputStream(baos.toByteArray());
 	}
 
 }

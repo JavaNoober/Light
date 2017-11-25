@@ -1,4 +1,4 @@
-package com.light.core;
+package com.light.core.Utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -170,6 +170,16 @@ public class MatrixUtil {
 			}
 			return afterBitmap;
 		}
+	}
+
+	public static float getScale(int width, int height, int currentWidth, int currentHeight) {
+		float scale = 1;
+		if((width > 0 && height > 0) && (currentWidth > width || currentHeight > height)){
+			float widthScale = (float) width / currentWidth;
+			float heightScale = (float) height / currentHeight;
+			scale = Math.min(widthScale, heightScale);
+		}
+		return scale;
 	}
 
 }

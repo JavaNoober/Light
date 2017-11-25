@@ -1,21 +1,19 @@
 package com.light.body;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 /**
  * Created by xiaoqi on 2017/11/21.
  *
- * 1:设置文件最大值
- * 2:图片的旋转缩放
- * 3:异步并发压缩
- * 4:同步压缩
  */
 
 public class Light {
 
 	private static Light light;
 	private LightConfig config;
-	private Context context;
+	private Context applicationContext;
+	private Resources resources;
 
 	private Light(){
 
@@ -32,14 +30,20 @@ public class Light {
 		return light;
 	}
 
-	public void setConfig(LightConfig config){
+	public Light setConfig(LightConfig config){
 		this.config = config;
+		return this;
 	}
 
 	public LightConfig getConfig(){
 		return config;
 	}
 
+	public Light init(Context context){
+		this.applicationContext = context.getApplicationContext();
+		this.resources = applicationContext.getResources();
+		return this;
+	}
 
 	public static boolean compressDrawableRes(){
 		return true;
@@ -62,6 +66,10 @@ public class Light {
 	}
 
 	public Context getContext() {
-		return context;
+		return applicationContext;
+	}
+
+	public Resources getResources() {
+		return resources;
 	}
 }

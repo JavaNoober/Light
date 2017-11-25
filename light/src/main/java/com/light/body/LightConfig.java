@@ -62,4 +62,5 @@ public class LightConfig implements Serializable{
 	public void setDefaultQuality(int defaultQuality) {
 		this.defaultQuality = defaultQuality;
 	}
+
 }
