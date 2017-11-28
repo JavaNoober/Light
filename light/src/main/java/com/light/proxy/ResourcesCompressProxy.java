@@ -3,6 +3,7 @@ package com.light.proxy;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -10,6 +11,7 @@ import android.util.TypedValue;
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.LightCompressEngine;
+import com.light.core.Utils.DisplayUtil;
 import com.light.core.Utils.L;
 import com.light.core.Utils.MatrixUtil;
 import com.light.core.listener.ICompressEngine;
@@ -80,21 +82,28 @@ public class ResourcesCompressProxy implements ICompressProxy {
 	}
 
 
-	public static Bitmap decodeResource(int id) {
-
-		int densityDpi = Light.getInstance().getResources().getDisplayMetrics().densityDpi;
-		Bitmap bitmap;
-		TypedValue value = new TypedValue();
-		Light.getInstance().getResources().openRawResource(id, value);
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inPreferredConfig = Bitmap.Config.ALPHA_8;
-		if (densityDpi > DisplayMetrics.DENSITY_HIGH) {
-			opts.inTargetDensity = value.density;
-			bitmap = BitmapFactory.decodeResource(Light.getInstance().getResources(), id, opts);
-		}else{
-			bitmap = BitmapFactory.decodeResource(Light.getInstance().getResources(), id);
-		}
-
-		return bitmap;
+	public static Bitmap decodeResource(@DrawableRes int id, LightConfig lightConfig) {
+//		Drawable drawable = ContextCompat.getDrawable(Light.getInstance().getContext(), id);
+//		int width = drawable.getIntrinsicWidth();
+//		int height = drawable.getIntrinsicHeight();
+		int screenWidth = DisplayUtil.getScreenWidth(Light.getInstance().getContext());
+		int screenHeight = DisplayUtil.getScreenHeight(Light.getInstance().getContext());
+//		float scale = 1;
+//		if(height > width){
+//			if(height > screenHeight){
+//				scale = MatrixUtil.getScale(screenWidth, screenHeight, width, height);
+//			}
+//		}else {
+//			if(width > screenHeight){
+//				scale =MatrixUtil.getScale(screenWidth, screenHeight, height, width);
+//			}
+//		}
+		Bitmap result = new LightCompressEngine(lightConfig).compress2Bitmap(id, screenWidth, screenHeight);
+//		float scaleSize = MatrixUtil.getScale(width, height, result.getWidth(), result.getHeight());
+//		if(scaleSize < 1){
+//			L.e("scaleSize:"+ scaleSize);
+//			return new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result).build();
+//		}
+		return result;
 	}
 }

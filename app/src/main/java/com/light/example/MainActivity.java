@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
 		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
 
-		Bitmap bb = new ResourcesCompressProxy().decodeResource(R.drawable.test_4608_3456);
+		Bitmap bb = new ResourcesCompressProxy().decodeResource(R.drawable.test_4608_3456, config);
 		Log.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节");
 		Log.e("MemorySize", MemoryComputeUtil.getMemorySize(bb) + "字节");
 		try {
