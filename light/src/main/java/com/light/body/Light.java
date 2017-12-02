@@ -3,12 +3,15 @@ package com.light.body;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.light.core.Utils.DisplayUtil;
+
 /**
  * Created by xiaoqi on 2017/11/21.
  *
  */
 
 public class Light {
+	public final static String TAG = "Light";
 
 	private static Light light;
 	private LightConfig config;
@@ -30,9 +33,15 @@ public class Light {
 		return light;
 	}
 
-	public Light setConfig(LightConfig config){
+	public void setConfig(LightConfig config){
 		this.config = config;
-		return this;
+		if(config.getMaxWidth() <= 0){
+			config.setMaxWidth(DisplayUtil.getScreenWidth(applicationContext));
+		}
+		if(config.getMaxHeight() <= 0){
+			config.setMaxHeight(DisplayUtil.getScreenHeight(applicationContext));
+		}
+
 	}
 
 	public LightConfig getConfig(){

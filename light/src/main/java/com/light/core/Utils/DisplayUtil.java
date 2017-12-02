@@ -3,11 +3,12 @@ package com.light.core.Utils;
 import android.content.Context;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 
+import com.light.body.Light;
+
 public class DisplayUtil {
-	private static final String TAG = "DisplayUtil";
+	private static final String TAG = Light.TAG + "DisplayUtil";
 	/**
 	 * dip转px
 	 * @param context
@@ -39,7 +40,7 @@ public class DisplayUtil {
 		DisplayMetrics dm =context.getResources().getDisplayMetrics();
 		int w_screen = dm.widthPixels;
 		int h_screen = dm.heightPixels;
-		Log.i(TAG, "Screen---Width = " + w_screen + " Height = " + h_screen + " densityDpi = " + dm.densityDpi);
+		L.i(TAG, "Screen---Width = " + w_screen + " Height = " + h_screen + " densityDpi = " + dm.densityDpi);
 		return new Point(w_screen, h_screen);
 
 	}

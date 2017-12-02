@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ICompressEngine {
 
-	Bitmap compress2Bitmap(Context context, Bitmap bitmap, int quality, int width, int height);
+	Bitmap compress2Bitmap(Bitmap bitmap, int width, int height);
 
 	Bitmap compress2Bitmap(String imagePath, int width, int height);
 

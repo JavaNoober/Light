@@ -24,15 +24,16 @@ import java.lang.ref.SoftReference;
  */
 
 public class ResourcesCompressProxy implements ICompressProxy {
-
+	private final static String TAG = Light.TAG + "-ResourcesCompressProxy";
 	private int resId;
 	private int width;
 	private int height;
 	private LightConfig lightConfig;
-	private static ResourcesCompressProxy proxy;
+	private ICompressEngine compressEngine;
 
 	public ResourcesCompressProxy() {
 		lightConfig = Light.getInstance().getConfig();
+		compressEngine = new LightCompressEngine();
 	}
 
 	@Override
@@ -42,68 +43,51 @@ public class ResourcesCompressProxy implements ICompressProxy {
 
 	@Override
 	public Bitmap compress() {
-		ICompressEngine compressEngine = getCompressEngine();
-		int resultWidth = 0;
-		int resultHeight = 0;
+		int resultWidth;
+		int resultHeight;
 		if(width > 0 && height >0){
 			resultWidth = width;
 			resultHeight = height;
-		}else if(lightConfig.getMaxHeight() > 0 && lightConfig.getMaxHeight() > 0){
-			resultWidth = lightConfig.getMaxHeight();
+		}else {
+			resultWidth = lightConfig.getMaxWidth();
 			resultHeight = lightConfig.getMaxHeight();
 		}
-
+		L.i(TAG, "finalWidth:"+resultWidth+" finalHeight:"+resultHeight);
 		Bitmap result = compressEngine.compress2Bitmap(resId, resultWidth, resultHeight);
-		float scaleSize = MatrixUtil.getScale(width, height, result.getWidth(), result.getHeight());
+		float scaleSize = MatrixUtil.getScale(resultWidth, resultHeight, result.getWidth(), result.getHeight());
 		if(scaleSize < 1){
-			L.e("scaleSize:"+ scaleSize);
 			return new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result).build();
 		}
 		return result;
 	}
 
-	public ResourcesCompressProxy resource(int resId) {
-		this.resId = resId;
-		return this;
+	public static class Build {
+		private int resId;
+		private int width;
+		private int height;
+
+		public Build resource(@DrawableRes int resId) {
+			this.resId = resId;
+			return this;
+		}
+
+		public Build width(int width) {
+			this.width = width;
+			return this;
+		}
+
+		public Build height(int height) {
+			this.height = height;
+			return this;
+		}
+
+		public ResourcesCompressProxy build(){
+			ResourcesCompressProxy proxy = new ResourcesCompressProxy();
+			proxy.width = width;
+			proxy.height = height;
+			proxy.resId = resId;
+			return proxy;
+		}
 	}
 
-	public ResourcesCompressProxy width(int width) {
-		this.width = width;
-		return this;
-	}
-
-	public ResourcesCompressProxy height(int height) {
-		this.height = height;
-		return this;
-	}
-
-	private ICompressEngine getCompressEngine(){
-		return new LightCompressEngine(lightConfig);
-	}
-
-
-	public static Bitmap decodeResource(@DrawableRes int id, LightConfig lightConfig) {
-//		Drawable drawable = ContextCompat.getDrawable(Light.getInstance().getContext(), id);
-//		int width = drawable.getIntrinsicWidth();
-//		int height = drawable.getIntrinsicHeight();
-		int screenWidth = DisplayUtil.getScreenWidth(Light.getInstance().getContext());
-		int screenHeight = DisplayUtil.getScreenHeight(Light.getInstance().getContext());
-//		float scale = 1;
-//		if(height > width){
-//			if(height > screenHeight){
-//				scale = MatrixUtil.getScale(screenWidth, screenHeight, width, height);
-//			}
-//		}else {
-//			if(width > screenHeight){
-//				scale =MatrixUtil.getScale(screenWidth, screenHeight, height, width);
-//			}
-//		}
-		Bitmap result = new LightCompressEngine(lightConfig).compress2Bitmap(id, screenWidth, screenHeight);
-//		float scaleSize = MatrixUtil.getScale(width, height, result.getWidth(), result.getHeight());
-//		if(scaleSize < 1){
-//			L.e("scaleSize:"+ scaleSize);
-//			return new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result).build();
-//		}
-		return result;
-	}
 }

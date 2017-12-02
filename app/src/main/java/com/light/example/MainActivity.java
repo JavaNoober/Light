@@ -5,13 +5,12 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.LightCompressEngine;
-import com.light.core.Utils.DisplayUtil;
+import com.light.core.Utils.L;
 import com.light.core.Utils.MemoryComputeUtil;
 import com.light.proxy.ResourcesCompressProxy;
 
@@ -30,34 +29,29 @@ public class MainActivity extends AppCompatActivity {
 
 		LightConfig config = new LightConfig();
 		config.setMaxFileSize(2222222);
-		config.setMaxHeight(1024);
-		config.setMaxWidth(1024);
 		Light.getInstance().init(this).setConfig(config);
 
-		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
-
-		Bitmap bb = new ResourcesCompressProxy().decodeResource(R.drawable.test_4608_3456, config);
-		Log.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节");
-		Log.e("MemorySize", MemoryComputeUtil.getMemorySize(bb) + "字节");
+//		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.d1);
+//
+//		c
+//
+//		L.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节");
+//		L.e("MemorySize", MemoryComputeUtil.getMemorySize(b) + "字节");
 		try {
 			String pathRoot = Environment.getExternalStorageDirectory().getCanonicalPath()+"/bitmap.jpg";
-			String pathRoot2 = Environment.getExternalStorageDirectory().getCanonicalPath()+"/test_1920_1200_o.jpg";
+			String pathRoot2 = Environment.getExternalStorageDirectory().getCanonicalPath()+"/test_1920_1200.jpg";
 			ArrayList<String> list = new ArrayList<>();
 			for(int i = 0;i < 10 ;i ++){
 				list.add(i+"");
 			}
-//			Bitmap b = new ResourcesCompressProxy().resource(R.drawable.test_1920_1200)
-//					.height(DisplayUtil.dip2px(this, 960))
-//					.width(DisplayUtil.dip2px(this, 600))
-//					.compress();
-//
-////			boolean bitmap1 = new LightCompressEngine(L'ight.getInstance(this)).compress2File(bitmap, pathRoot2);
-//			imageView.setImageBitmap(b);
-//			Log.e("MemorySize", MemoryComputeUtil.getMemorySize(b) + "字节");
-//			Log.e("MemorySize", b.getWidth() + "  " + b.getHeight());
-//			Log.e("MemorySize", DisplayUtil.px2dip(this, b.getWidth()) + "  " + DisplayUtil.px2dip(this, b
-//					.getHeight()));
-
+			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
+			L.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节");
+			Bitmap b1 = new LightCompressEngine().compress2Bitmap(pathRoot2, 1080, 1920);
+			Bitmap b2 = new ResourcesCompressProxy.Build().resource(R.drawable.test_1920_1200).build().compress();
+			Bitmap b3 = new LightCompressEngine().compress2Bitmap(bitmap, 1080, 1920);
+			L.e("MemorySize", MemoryComputeUtil.getMemorySize(b1) + "字节");
+			L.e("MemorySize", MemoryComputeUtil.getMemorySize(b2) + "字节");
+			L.e("MemorySize", MemoryComputeUtil.getMemorySize(b3) + "字节");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
