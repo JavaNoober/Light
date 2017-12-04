@@ -38,7 +38,18 @@ public class ResourcesCompressProxy implements ICompressProxy {
 
 	@Override
 	public boolean compress(String outPath) {
-		return false;
+		int resultWidth;
+		int resultHeight;
+		if(width > 0 && height >0){
+			resultWidth = width;
+			resultHeight = height;
+		}else {
+			resultWidth = lightConfig.getMaxWidth();
+			resultHeight = lightConfig.getMaxHeight();
+		}
+		L.i(TAG, "finalWidth:"+resultWidth+" finalHeight:"+resultHeight);
+		Bitmap result = compress();
+		return compressEngine.compress2File(result, outPath, lightConfig.getDefaultQuality(), resultWidth, resultHeight);
 	}
 
 	@Override

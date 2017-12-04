@@ -1,4 +1,4 @@
-package com.light.core;
+package com.light.core.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
