@@ -1,23 +1,16 @@
 package com.light.proxy;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
-import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.LightCompressEngine;
-import com.light.core.Utils.DisplayUtil;
 import com.light.core.Utils.L;
 import com.light.core.Utils.MatrixUtil;
 import com.light.core.listener.ICompressEngine;
 import com.light.core.listener.ICompressProxy;
 
-import java.lang.ref.SoftReference;
 
 /**
  * Created by xiaoqi on 2017/11/25.

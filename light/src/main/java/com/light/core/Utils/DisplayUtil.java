@@ -8,7 +8,7 @@ import android.view.View;
 import com.light.body.Light;
 
 public class DisplayUtil {
-	private static final String TAG = Light.TAG + "DisplayUtil";
+	private static final String TAG = Light.TAG + "-DisplayUtil";
 	/**
 	 * dip转px
 	 * @param context

@@ -32,7 +32,6 @@ public class LightCompressCore {
 				long time = System.currentTimeMillis() - startTime;
 				Log.e("Light", "JNI耗时:" + time);
 			}
-
 		}else {
 			Bitmap result = null;
 			try {

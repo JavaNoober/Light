@@ -2,12 +2,14 @@ package com.light.core.Utils;
 
 import android.graphics.Bitmap;
 
+import com.light.body.Light;
+
 /**
  * Created by xiaoqi on 2017/11/22.
  */
 
 public class MemoryComputeUtil {
-	private final static String TAG = "MemoryComputeUtil";
+	private final static String TAG = Light.TAG + "-MemoryComputeUtil";
 
 
 	public static int getMemorySize(Bitmap bitmap){
@@ -26,7 +28,7 @@ public class MemoryComputeUtil {
 			//ARGB_8888
 			totalSize = width * height * 4;
 		}
-		L.e(TAG, "totalMemory:"+ totalSize / 1024 +"kb");
+		L.e(TAG, "totalMemorySize:"+ totalSize / 1024 +"kb");
 		return totalSize;
 	}
 }
