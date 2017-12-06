@@ -2,6 +2,7 @@ package com.light.core;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 
 import com.light.body.Light;
 import com.light.body.LightConfig;
@@ -13,6 +14,9 @@ import com.light.core.listener.ICompressEngine;
 import com.light.core.listener.OnCompressFinishListener;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
@@ -94,16 +98,46 @@ public class LightCompressEngine implements ICompressEngine{
 	//只会压缩文件大小，不会压缩bitmap大小
 	@Override
 	public boolean compress2File(Bitmap bitmap, String outputPath, int quality, int width, int height) {
-		int bitmapWidth = bitmap.getWidth();
-		int bitmapHeight = bitmap.getHeight();
-		float scale = MatrixUtil.getScale(width, height, bitmapWidth, bitmapHeight);
-		if(scale < 1){
-			L.e("Light", "scale:"+ scale);
-			Bitmap result = new MatrixUtil.Build().scale(scale, scale).bitmap(bitmap).build();
-			return LightCompressCore.compressBitmap(result, quality, outputPath);
-		}else {
-			return LightCompressCore.compressBitmap(bitmap, quality, outputPath);
+//		int bitmapWidth = bitmap.getWidth();
+//		int bitmapHeight = bitmap.getHeight();
+//		float scale = MatrixUtil.getScale(width, height, bitmapWidth, bitmapHeight);
+//		if(scale < 1){
+//			L.e("Light", "scale:"+ scale);
+//			Bitmap result = new MatrixUtil.Build().scale(scale, scale).bitmap(bitmap).build();
+//			return LightCompressCore.compressBitmap(result, quality, outputPath);
+//		}else {
+//			return LightCompressCore.compressBitmap(bitmap, quality, outputPath);
+//		}
+		if (bitmap.hasAlpha()) {
+			return compress(bitmap, outputPath, quality, Bitmap.CompressFormat.PNG);
+		} else {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+				return LightCompressCore.compressBitmap(bitmap, quality, outputPath);
+			} else {
+				return compress(bitmap, outputPath, quality, Bitmap.CompressFormat.JPEG);
+			}
 		}
+
+	}
+
+	static boolean compress(Bitmap bitmap, String outfile, int quality, Bitmap.CompressFormat format){
+		boolean isSuccess = false;
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(outfile);
+			isSuccess = bitmap.compress(format, quality, fos);
+		} catch (FileNotFoundException e){
+			e.printStackTrace();
+		} finally {
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return isSuccess;
 	}
 
 	public void compress(List<String> pathList, String outputPath, int fileSize,

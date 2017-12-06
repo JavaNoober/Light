@@ -20,6 +20,7 @@ public class BitmapCompressProxy implements ICompressProxy {
 	private Bitmap bitmap;
 	private int width;
 	private int height;
+	private int quality;
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
 
@@ -39,7 +40,11 @@ public class BitmapCompressProxy implements ICompressProxy {
 			resultWidth = lightConfig.getMaxWidth();
 			resultHeight = lightConfig.getMaxHeight();
 		}
-		return compressEngine.compress2File(bitmap, outPath, lightConfig.getDefaultQuality(), resultWidth, resultHeight);
+		if(quality <= 0){
+			quality = lightConfig.getDefaultQuality();
+		}
+
+		return compressEngine.compress2File(bitmap, outPath, quality, resultWidth, resultHeight);
 	}
 
 	@Override
@@ -66,7 +71,7 @@ public class BitmapCompressProxy implements ICompressProxy {
 		private int width;
 		private int height;
 
-		public BitmapCompressProxy.Build resource(Bitmap bitmap) {
+		public BitmapCompressProxy.Build bitmap(Bitmap bitmap) {
 			this.bitmap = bitmap;
 			return this;
 		}
@@ -78,6 +83,11 @@ public class BitmapCompressProxy implements ICompressProxy {
 
 		public BitmapCompressProxy.Build height(int height) {
 			this.height = height;
+			return this;
+		}
+
+		public BitmapCompressProxy.Build quality(int quality) {
+			this.height = quality;
 			return this;
 		}
 
