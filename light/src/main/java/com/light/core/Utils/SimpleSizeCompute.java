@@ -1,6 +1,9 @@
 package com.light.core.Utils;
 
 import android.graphics.BitmapFactory;
+import android.widget.Toast;
+
+import com.light.body.Light;
 
 /**
  * Created by xiaoqi on 2017/11/22.
@@ -19,14 +22,20 @@ public class SimpleSizeCompute {
 		} else {
 			roundedSize = (initialSize + 7) / 8 * 8;
 		}
+		if(Math.max(options.outWidth, options.outHeight) / roundedSize < minSideLength){
+			roundedSize >>= 1;
+		}else {
+			Toast.makeText(Light.getInstance().getContext(), "SimpleSize正好", Toast.LENGTH_LONG).show();
+		}
+
 		return roundedSize;
 	}
 
 	private static int computeInitialSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
 		double w = options.outWidth;
 		double h = options.outHeight;
-		int lowerBound = (maxNumOfPixels == -1) ? 1 : (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));
-		int upperBound = (minSideLength == -1) ? 128 :(int) Math.min(Math.floor(w / minSideLength), Math.floor(h / minSideLength));
+		int lowerBound = (maxNumOfPixels <0 ) ? 1 : (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));
+		int upperBound = (minSideLength <0) ? 128 :(int) Math.min(Math.floor(w / minSideLength), Math.floor(h / minSideLength));
 		if (upperBound < lowerBound) {
 			return lowerBound;
 		}

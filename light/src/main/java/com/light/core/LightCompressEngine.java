@@ -3,10 +3,12 @@ package com.light.core;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.compress.LightCompressCore;
+import com.light.compress.NativeCompressCore;
 import com.light.core.Utils.L;
 import com.light.core.Utils.MatrixUtil;
 import com.light.core.Utils.SimpleSizeCompute;
@@ -35,12 +37,6 @@ import io.reactivex.schedulers.Schedulers;
 public class LightCompressEngine implements ICompressEngine{
 	private final static String TAG = Light.TAG + "-LightCompressEngine";
 
-	private LightConfig lightConfig;
-
-	public LightCompressEngine(){
-		this.lightConfig = Light.getInstance().getConfig();
-	}
-
 	@Override
 	public Bitmap compress2Bitmap(Bitmap bitmap, int width, int height) {
 		String temp = Light.getInstance().getContext().getCacheDir().getAbsolutePath()
@@ -66,7 +62,7 @@ public class LightCompressEngine implements ICompressEngine{
 			options.inInputShareable = true;
 			options.inSampleSize = SimpleSizeCompute.computeSampleSize(options , Math.max(width, height),
 					width * height);
-			L.e(TAG, "inSampleSize:"+options.inSampleSize);
+			L.e(TAG, "sampleSize:"+ options.inSampleSize);
 			return BitmapFactory.decodeFile(imagePath, options);
 		}finally {
 			L.e(TAG, "耗时："+ (System.currentTimeMillis() - start));
@@ -87,7 +83,7 @@ public class LightCompressEngine implements ICompressEngine{
 			options.inInputShareable = true;
 			options.inSampleSize = SimpleSizeCompute.computeSampleSize(options , Math.max(width, height),
 					width * height);
-			L.e("samplesize:"+options.inSampleSize);
+			L.e("sampleSize:"+options.inSampleSize);
 			InputStream is = Light.getInstance().getResources().openRawResource(resId);
 			return BitmapFactory.decodeStream(is,null,options);
 		}finally {
@@ -97,48 +93,22 @@ public class LightCompressEngine implements ICompressEngine{
 
 	//只会压缩文件大小，不会压缩bitmap大小
 	@Override
-	public boolean compress2File(Bitmap bitmap, String outputPath, int quality, int width, int height) {
-//		int bitmapWidth = bitmap.getWidth();
-//		int bitmapHeight = bitmap.getHeight();
-//		float scale = MatrixUtil.getScale(width, height, bitmapWidth, bitmapHeight);
-//		if(scale < 1){
-//			L.e("Light", "scale:"+ scale);
-//			Bitmap result = new MatrixUtil.Build().scale(scale, scale).bitmap(bitmap).build();
-//			return LightCompressCore.compressBitmap(result, quality, outputPath);
-//		}else {
-//			return LightCompressCore.compressBitmap(bitmap, quality, outputPath);
-//		}
+	public boolean compress2File(Bitmap bitmap, String outputPath, int quality) {
 		if (bitmap.hasAlpha()) {
-			return compress(bitmap, outputPath, quality, Bitmap.CompressFormat.PNG);
+			L.e(TAG, "compress by LightCompressCore");
+			return NativeCompressCore.compress(bitmap, outputPath, quality, Bitmap.CompressFormat.PNG);
 		} else {
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+				L.e(TAG, "compress by LightCompressCore");
 				return LightCompressCore.compressBitmap(bitmap, quality, outputPath);
 			} else {
-				return compress(bitmap, outputPath, quality, Bitmap.CompressFormat.JPEG);
+				L.e(TAG, "compress by NativeCompressCore");
+				return NativeCompressCore.compress(bitmap, outputPath, quality, Bitmap.CompressFormat.JPEG);
 			}
 		}
-
 	}
 
-	static boolean compress(Bitmap bitmap, String outfile, int quality, Bitmap.CompressFormat format){
-		boolean isSuccess = false;
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(outfile);
-			isSuccess = bitmap.compress(format, quality, fos);
-		} catch (FileNotFoundException e){
-			e.printStackTrace();
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return isSuccess;
-	}
+
 
 	public void compress(List<String> pathList, String outputPath, int fileSize,
 	                     final OnCompressFinishListener listener) {

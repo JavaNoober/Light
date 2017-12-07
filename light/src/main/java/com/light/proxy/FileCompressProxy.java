@@ -2,11 +2,11 @@ package com.light.proxy;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.DrawableRes;
 
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.LightCompressEngine;
+import com.light.core.Utils.MatrixUtil;
 import com.light.core.listener.ICompressEngine;
 import com.light.core.listener.ICompressProxy;
 
@@ -33,7 +33,10 @@ public class FileCompressProxy implements ICompressProxy {
 	//file->bitmap->file
 	@Override
 	public boolean compress(String outPath) {
-		return false;
+		if(quality <= 0 || quality > 100){
+			quality = lightConfig.getDefaultQuality();
+		}
+		return compressEngine.compress2File(compress(), outPath, quality);
 	}
 
 	@Override
@@ -44,12 +47,19 @@ public class FileCompressProxy implements ICompressProxy {
 			resultWidth = width;
 			resultHeight = height;
 		}else {
-			resultWidth = lightConfig.getMaxWidth();
-			resultHeight = lightConfig.getMaxHeight();
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			options.inScaled = false;
+			BitmapFactory.decodeFile(path, options);
+			resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
+			resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
 		}
 		Bitmap result = compressEngine.compress2Bitmap(path, resultWidth, resultHeight);
-//		result.compress()
-		return null;
+		float scaleSize = MatrixUtil.getScale(resultWidth, resultHeight, result.getWidth(), result.getHeight());
+		if(scaleSize < 1){
+			return new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result).build();
+		}
+		return result;
 	}
 
 	public static class Build {

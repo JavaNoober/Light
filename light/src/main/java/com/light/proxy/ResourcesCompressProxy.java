@@ -1,7 +1,10 @@
 package com.light.proxy;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 
 import com.light.body.Light;
 import com.light.body.LightConfig;
@@ -31,18 +34,8 @@ public class ResourcesCompressProxy implements ICompressProxy {
 
 	@Override
 	public boolean compress(String outPath) {
-		int resultWidth;
-		int resultHeight;
-		if(width > 0 && height >0){
-			resultWidth = width;
-			resultHeight = height;
-		}else {
-			resultWidth = lightConfig.getMaxWidth();
-			resultHeight = lightConfig.getMaxHeight();
-		}
-		L.i(TAG, "finalWidth:"+resultWidth+" finalHeight:"+resultHeight);
 		Bitmap result = compress();
-		return compressEngine.compress2File(result, outPath, lightConfig.getDefaultQuality(), resultWidth, resultHeight);
+		return compressEngine.compress2File(result, outPath, lightConfig.getDefaultQuality());
 	}
 
 	@Override
@@ -53,8 +46,12 @@ public class ResourcesCompressProxy implements ICompressProxy {
 			resultWidth = width;
 			resultHeight = height;
 		}else {
-			resultWidth = lightConfig.getMaxWidth();
-			resultHeight = lightConfig.getMaxHeight();
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			options.inScaled = false;
+			BitmapFactory.decodeResource(Light.getInstance().getResources(), resId, options);
+			resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
+			resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
 		}
 		L.i(TAG, "finalWidth:"+resultWidth+" finalHeight:"+resultHeight);
 		Bitmap result = compressEngine.compress2Bitmap(resId, resultWidth, resultHeight);
@@ -86,6 +83,9 @@ public class ResourcesCompressProxy implements ICompressProxy {
 		}
 
 		public ResourcesCompressProxy build(){
+			if(resId == 0){
+				throw new RuntimeException("resId is not exists");
+			}
 			ResourcesCompressProxy proxy = new ResourcesCompressProxy();
 			proxy.width = width;
 			proxy.height = height;

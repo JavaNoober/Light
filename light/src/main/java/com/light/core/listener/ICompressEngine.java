@@ -17,6 +17,6 @@ public interface ICompressEngine {
 
 	Bitmap compress2Bitmap(int resId, int width, int height);
 
-	boolean compress2File(Bitmap bitmap, String outputPath, int quality, int width, int height);
+	boolean compress2File(Bitmap bitmap, String outputPath, int quality);
 
 }

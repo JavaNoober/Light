@@ -13,6 +13,7 @@ import com.light.core.LightCompressEngine;
 import com.light.core.Utils.L;
 import com.light.core.Utils.MemoryComputeUtil;
 import com.light.proxy.BitmapCompressProxy;
+import com.light.proxy.FileCompressProxy;
 import com.light.proxy.ResourcesCompressProxy;
 
 import java.io.IOException;
@@ -30,25 +31,22 @@ public class MainActivity extends AppCompatActivity {
 
 		LightConfig config = new LightConfig();
 		config.setMaxFileSize(2222222);
+		config.setDefaultQuality(75);
 		Light.getInstance().init(this).setConfig(config);
 
-//		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.d1);
+		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
 //
 //		c
 //
 //		L.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节");
 //		L.e("MemorySize", MemoryComputeUtil.getMemorySize(b) + "字节");
 		try {
-			String pathRoot = getCacheDir().getAbsolutePath()+"/bitmap.jpg";
-			String pathRoot2 = Environment.getExternalStorageDirectory().getCanonicalPath()+"/test_1920_12003.jpg";
-			ArrayList<String> list = new ArrayList<>();
-			for(int i = 0;i < 10 ;i ++){
-				list.add(i+"");
-			}
-			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
-			L.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节");
-//			Bitmap b1 = new LightCompressEngine().compress2Bitmap(pathRoot2, 1080, 1920);
-			new BitmapCompressProxy.Build().resource(bitmap).build().compress(pathRoot2);
+			String pathRoot2 = Environment.getExternalStorageDirectory().getCanonicalPath()+"/888.jpg";
+//			new ResourcesCompressProxy.Build().resource(R.drawable.test_1920_1200).build()
+//					.compress(pathRoot2);
+			Bitmap b = new FileCompressProxy.Build().path(pathRoot2).build().compress();
+			imageView.setImageBitmap(b);
+			L.e("MemorySize", MemoryComputeUtil.getMemorySize(b) + "字节");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

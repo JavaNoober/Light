@@ -24,6 +24,9 @@ public class LightCompressCore {
 
 	public static boolean compressBitmap(Bitmap bit, int quality, String fileName) {
 		long startTime = System.currentTimeMillis();
+		if (quality < 0 || quality > 100) {
+			throw new IllegalArgumentException("quality must be 0..100");
+		}
 		Bitmap.Config config = bit.getConfig();
 		if(config.equals(Bitmap.Config.ARGB_8888)){
 			try {
