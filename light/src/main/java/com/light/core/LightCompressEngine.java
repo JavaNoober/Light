@@ -15,11 +15,13 @@ import com.light.core.Utils.SimpleSizeCompute;
 import com.light.core.listener.ICompressEngine;
 import com.light.core.listener.OnCompressFinishListener;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,11 +57,13 @@ public class LightCompressEngine implements ICompressEngine{
 		try {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
-			options.inPreferredConfig = Bitmap.Config.RGB_565;
 			BitmapFactory.decodeFile(imagePath, options);
+			options.inPreferredConfig = Bitmap.Config.RGB_565;
 			options.inJustDecodeBounds = false;
-			options.inPurgeable = true;
-			options.inInputShareable = true;
+			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+				options.inPurgeable = true;
+				options.inInputShareable = true;
+			}
 			options.inSampleSize = SimpleSizeCompute.computeSampleSize(options , Math.max(width, height),
 					width * height);
 			L.e(TAG, "sampleSize:"+ options.inSampleSize);
@@ -71,7 +75,6 @@ public class LightCompressEngine implements ICompressEngine{
 
 	@Override
 	public Bitmap compress2Bitmap(int resId, int width, int height) {
-
 		long start = System.currentTimeMillis();
 		try {
 			BitmapFactory.Options options = new BitmapFactory.Options();
@@ -79,14 +82,53 @@ public class LightCompressEngine implements ICompressEngine{
 			options.inPreferredConfig = Bitmap.Config.RGB_565;
 			BitmapFactory.decodeResource(Light.getInstance().getResources(),resId,options);
 			options.inJustDecodeBounds = false;
-			options.inPurgeable = true;
-			options.inInputShareable = true;
+			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+				options.inPurgeable = true;
+				options.inInputShareable = true;
+			}
 			options.inSampleSize = SimpleSizeCompute.computeSampleSize(options , Math.max(width, height),
 					width * height);
 			L.e("sampleSize:"+options.inSampleSize);
 			InputStream is = Light.getInstance().getResources().openRawResource(resId);
 			return BitmapFactory.decodeStream(is,null,options);
 		}finally {
+			L.e("MemorySize", "耗时："+ (System.currentTimeMillis() - start));
+		}
+	}
+
+	@Override
+	public Bitmap compress2Bitmap(byte[] bytes, int width, int height) {
+		long start = System.currentTimeMillis();
+		InputStream input = null;
+		try {
+			input = new ByteArrayInputStream(bytes);
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(input, null, options);
+			try {
+				input.reset();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			options.inJustDecodeBounds = false;
+			options.inPreferredConfig = Bitmap.Config.RGB_565;
+			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+				options.inPurgeable = true;
+				options.inInputShareable = true;
+			}
+			options.inSampleSize = SimpleSizeCompute.computeSampleSize(options , Math.max(width, height),
+					width * height);
+			L.e("sampleSize:"+options.inSampleSize);
+			input = new ByteArrayInputStream(bytes);
+			return BitmapFactory.decodeStream(input, null, options);
+		} finally {
+			if(input != null){
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			L.e("MemorySize", "耗时："+ (System.currentTimeMillis() - start));
 		}
 	}

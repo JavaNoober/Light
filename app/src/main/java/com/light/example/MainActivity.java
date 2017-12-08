@@ -13,9 +13,11 @@ import com.light.core.LightCompressEngine;
 import com.light.core.Utils.L;
 import com.light.core.Utils.MemoryComputeUtil;
 import com.light.proxy.BitmapCompressProxy;
+import com.light.proxy.BytesCompressProxy;
 import com.light.proxy.FileCompressProxy;
 import com.light.proxy.ResourcesCompressProxy;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -35,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 		Light.getInstance().init(this).setConfig(config);
 
 		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		byte[] datas = baos.toByteArray();
 //
 //		c
 //
@@ -44,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 			String pathRoot2 = Environment.getExternalStorageDirectory().getCanonicalPath()+"/888.jpg";
 //			new ResourcesCompressProxy.Build().resource(R.drawable.test_1920_1200).build()
 //					.compress(pathRoot2);
-			Bitmap b = new FileCompressProxy.Build().path(pathRoot2).build().compress();
+			Bitmap b = new BytesCompressProxy.Build().bytes(datas).width(1024).height(768).build().compress();
 			imageView.setImageBitmap(b);
 			L.e("MemorySize", MemoryComputeUtil.getMemorySize(b) + "字节");
 		} catch (IOException e) {
