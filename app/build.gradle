@@ -10,8 +10,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-//            abiFilters 'armeabi-v7a', 'armeabi'
-            abiFilters 'armeabi-v7a', 'armeabi','x86'
+            abiFilters 'armeabi-v7a', 'armeabi', 'x86'
         }
     }
     buildTypes {
@@ -20,7 +19,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'armeabi','x86'
+            universalApk true
+        }
+    }
 }
 
 dependencies {

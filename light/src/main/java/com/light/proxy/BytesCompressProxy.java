@@ -52,7 +52,6 @@ public class BytesCompressProxy implements ICompressProxy {
 				input = new ByteArrayInputStream(bytes);
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inJustDecodeBounds = true;
-				options.inScaled = false;
 				BitmapFactory.decodeStream(input, null, options);
 				resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
 				resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);

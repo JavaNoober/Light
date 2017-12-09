@@ -3,8 +3,6 @@ package com.light.proxy;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.v4.content.ContextCompat;
 
 import com.light.body.Light;
 import com.light.body.LightConfig;
@@ -22,6 +20,7 @@ import com.light.core.listener.ICompressProxy;
 public class ResourcesCompressProxy implements ICompressProxy {
 	private final static String TAG = Light.TAG + "-ResourcesCompressProxy";
 	private int resId;
+	private Drawable drawable;
 	private int width;
 	private int height;
 	private LightConfig lightConfig;
@@ -46,12 +45,16 @@ public class ResourcesCompressProxy implements ICompressProxy {
 			resultWidth = width;
 			resultHeight = height;
 		}else {
-			BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inJustDecodeBounds = true;
-			options.inScaled = false;
-			BitmapFactory.decodeResource(Light.getInstance().getResources(), resId, options);
-			resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
-			resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
+			if(drawable != null){
+				resultWidth = Math.min(lightConfig.getMaxWidth(), drawable.getIntrinsicWidth());
+				resultHeight = Math.min(lightConfig.getMaxHeight(), drawable.getIntrinsicHeight());
+			}else {
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+				BitmapFactory.decodeResource(Light.getInstance().getResources(), resId, options);
+				resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
+				resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
+			}
 		}
 		L.i(TAG, "finalWidth:"+resultWidth+" finalHeight:"+resultHeight);
 		Bitmap result = compressEngine.compress2Bitmap(resId, resultWidth, resultHeight);
@@ -64,11 +67,17 @@ public class ResourcesCompressProxy implements ICompressProxy {
 
 	public static class Build {
 		private int resId;
+		private Drawable drawable;
 		private int width;
 		private int height;
 
-		public Build resource(@DrawableRes int resId) {
+		public Build resource(int resId) {
 			this.resId = resId;
+			return this;
+		}
+
+		public Build drawable(Drawable drawable) {
+			this.drawable = drawable;
 			return this;
 		}
 
@@ -83,13 +92,14 @@ public class ResourcesCompressProxy implements ICompressProxy {
 		}
 
 		public ResourcesCompressProxy build(){
-			if(resId == 0){
-				throw new RuntimeException("resId is not exists");
+			if(resId == 0 && drawable == null){
+				throw new RuntimeException("resource is not exists");
 			}
 			ResourcesCompressProxy proxy = new ResourcesCompressProxy();
 			proxy.width = width;
 			proxy.height = height;
 			proxy.resId = resId;
+			proxy.drawable = drawable;
 			return proxy;
 		}
 	}

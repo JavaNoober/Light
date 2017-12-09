@@ -42,6 +42,13 @@ public class UriPraser {
 	 */
 	public static final String LOCAL_RESOURCE_SCHEME = "res";
 
+
+	/**
+	 * android.resource scheme for URIs.
+	 */
+	public static final String LOCAL_ANDROID_RESOURCE_SCHEME = "android.resource";
+
+
 	/**
 	 * Data scheme for URIs.
 	 */
@@ -103,6 +110,11 @@ public class UriPraser {
 		return LOCAL_RESOURCE_SCHEME.equals(scheme);
 	}
 
+	public static boolean isLocalAnroidResourceUri(Uri uri) {
+		final String scheme = getSchemeOrNull(uri);
+		return LOCAL_ANDROID_RESOURCE_SCHEME.equals(scheme);
+	}
+
 	/**
 	 * Check if the uri is a data uri.
 	 */
@@ -128,25 +140,26 @@ public class UriPraser {
 		return uriAsString != null ? Uri.parse(uriAsString) : null;
 	}
 
-	/**
-	 * Get the path of a file from the Uri.
-	 *
-	 * @param srcUri The source uri.
-	 * @return The Path for the file or null if doesn't exists.
-	 */
-	public static String getRealPathFromUri(final Uri srcUri) {
+	public static String getPathFromFileUri(final Uri srcUri) {
+		return srcUri.getPath();
+	}
+
+
+	public static String getPathFromContentUri(final Uri srcUri) {
 		String result = null;
-		if (isLocalContentUri(srcUri)) {
-			Cursor cursor = Light.getInstance().getContext().getContentResolver().query(srcUri, null, null, null,
-					null);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+		String[] proj = { MediaStore.Images.Media.DATA };
+		Cursor cursor = Light.getInstance().getContext().getContentResolver().query(srcUri, proj, null, null,
+				null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+			if(idx > 0){
 				result = cursor.getString(idx);
-				cursor.close();
 			}
-		} else if (isLocalFileUri(srcUri)) {
-			result = srcUri.getPath();
+			cursor.close();
+		}
+		if(result == null){
+			throw new RuntimeException("Uri pares error!");
 		}
 		return result;
 	}

@@ -49,7 +49,6 @@ public class FileCompressProxy implements ICompressProxy {
 		}else {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
-			options.inScaled = false;
 			BitmapFactory.decodeFile(path, options);
 			resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
 			resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
