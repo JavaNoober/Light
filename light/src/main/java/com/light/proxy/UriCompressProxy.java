@@ -2,13 +2,14 @@ package com.light.proxy;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Looper;
 
 import com.light.body.Light;
 import com.light.core.Utils.UriPraser;
+import com.light.core.Utils.http.HttpHelper;
 import com.light.core.listener.ICompressProxy;
+import com.light.core.listener.OnCompressFinishListener;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -24,13 +25,48 @@ public class UriCompressProxy implements ICompressProxy {
 	private int height;
 	private int quality;
 	private ICompressProxy compressProxy = null;
+	private OnCompressFinishListener compressFinishListener = null;
 
 	@Override
 	public boolean compress(String outPath) {
-		if(compressProxy != null){
-			return compressProxy.compress(outPath);
+		if(UriPraser.isLocalFileUri(uri)){
+			String filePath = UriPraser.getPathFromFileUri(uri);
+			compressProxy = new FileCompressProxy.Build().width(width).height(height).quality(quality).path(filePath).build();
+		}else if(UriPraser.isLocalContentUri(uri)){
+			String filePath = UriPraser.getPathFromContentUri(uri);
+			compressProxy = new FileCompressProxy.Build().width(width).height(height).quality(quality).path(filePath).build();
+		}else if(UriPraser.isLocalAnroidResourceUri(uri)){
+			try {
+				InputStream input = Light.getInstance().getContext().getContentResolver().openInputStream(uri);
+				Bitmap bitmap = BitmapFactory.decodeStream(input);
+				compressProxy = new BitmapCompressProxy.Build().quality(quality).width(width).height(height).bitmap(bitmap).build();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}else if(UriPraser.isNetworkUri(uri)){
+			throw new RuntimeException("network uri is not support yet");
+//			if(Looper.getMainLooper() == Looper.myLooper()){
+//				throw new RuntimeException("network uri can't compressed on UI Thread");
+//			}
+//			if(compressFinishListener != null){
+//				HttpHelper.downloadImage(uri, compressFinishListener);
+//			}
 		}else {
 			return false;
+		}
+		return compressProxy.compress(outPath);
+	}
+
+
+	//TODO
+	private void compress(String outPath, OnCompressFinishListener compressFinishListener) {
+		if(UriPraser.isNetworkUri(uri)) {
+			if (Looper.getMainLooper() == Looper.myLooper()) {
+				throw new RuntimeException("network uri can't compressed on UI Thread");
+			}
+			if (compressFinishListener != null) {
+				HttpHelper.downloadImage(uri, compressFinishListener);
+			}
 		}
 	}
 
@@ -56,6 +92,8 @@ public class UriCompressProxy implements ICompressProxy {
 				throw new RuntimeException("network uri can't compressed on UI Thread");
 			}
 //			compressProxy = new FileCompressProxy.Build().width(width).height(height).path().build();
+		}else {
+			return null;
 		}
 
 		return compressProxy.compress();
@@ -66,6 +104,8 @@ public class UriCompressProxy implements ICompressProxy {
 		private int width;
 		private int height;
 		private int quality;
+		private OnCompressFinishListener compressFinishListener;
+
 
 		public Build uri(Uri uri) {
 			this.uri = uri;
@@ -87,6 +127,11 @@ public class UriCompressProxy implements ICompressProxy {
 			return this;
 		}
 
+		public Build compressListener(OnCompressFinishListener compressFinishListener) {
+			this.compressFinishListener = compressFinishListener;
+			return this;
+		}
+
 		public UriCompressProxy build(){
 			if(uri == null){
 				throw new RuntimeException("resId is not exists");
@@ -96,6 +141,7 @@ public class UriCompressProxy implements ICompressProxy {
 			proxy.height = height;
 			proxy.uri = uri;
 			proxy.quality = quality;
+			proxy.compressFinishListener = compressFinishListener;
 			return proxy;
 		}
 	}

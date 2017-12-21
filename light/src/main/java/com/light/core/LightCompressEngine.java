@@ -174,7 +174,7 @@ public class LightCompressEngine implements ICompressEngine{
 					@Override
 					public void run() throws Exception {
 						if(listener != null){
-							listener.onFinish();
+							listener.onFinish(null);
 						}
 					}
 				});

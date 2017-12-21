@@ -6,5 +6,5 @@ package com.light.core.listener;
 
 public interface OnCompressFinishListener {
 
-	void onFinish();
+	void onFinish(byte[] bytes);
 }
