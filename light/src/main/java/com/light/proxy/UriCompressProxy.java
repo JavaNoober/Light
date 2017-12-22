@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 
 import com.light.body.Light;
 import com.light.core.Utils.UriPraser;
@@ -70,6 +71,7 @@ public class UriCompressProxy implements ICompressProxy {
 		}
 	}
 
+	@Nullable
 	@Override
 	public Bitmap compress() {
 

@@ -38,28 +38,6 @@ public class HttpHelper {
 
     private static final int TIMEOUT = 30000;
 
-    static {
-        try {
-            SSLContext context = SSLContext.getInstance("TLS");
-            context.init(null, new TrustManager[]{new TinyTrustManager()}, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-            //do not verify
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    //for google store reject,see https://support.google.com/faqs/answer/7188426.
-                    return !"www.abcdefgzxy.com".equalsIgnoreCase(hostname);
-                }
-            });
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            //ignore...
-        }
-    }
-
     public static void downloadImage(String url, OnCompressFinishListener callback) {
         if (TextUtils.isEmpty(url))
             return;
@@ -156,27 +134,6 @@ public class HttpHelper {
                 return true;
             default:
                 return false;
-        }
-    }
-
-    /**
-     * Trust all certificates.
-     */
-    private static final class TinyTrustManager implements X509TrustManager {
-
-        @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-
-        }
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-
-        }
-
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
-            return new X509Certificate[0];
         }
     }
 
