@@ -54,27 +54,27 @@ public class BitmapCompressProxy implements ICompressProxy {
 		return result;
 	}
 
-	public static class Build {
+	public static class Builder {
 		private Bitmap bitmap;
 		private int width;
 		private int height;
 
-		public BitmapCompressProxy.Build bitmap(Bitmap bitmap) {
+		public BitmapCompressProxy.Builder bitmap(Bitmap bitmap) {
 			this.bitmap = bitmap;
 			return this;
 		}
 
-		public BitmapCompressProxy.Build width(int width) {
+		public BitmapCompressProxy.Builder width(int width) {
 			this.width = width;
 			return this;
 		}
 
-		public BitmapCompressProxy.Build height(int height) {
+		public BitmapCompressProxy.Builder height(int height) {
 			this.height = height;
 			return this;
 		}
 
-		public BitmapCompressProxy.Build quality(int quality) {
+		public BitmapCompressProxy.Builder quality(int quality) {
 			this.height = quality;
 			return this;
 		}

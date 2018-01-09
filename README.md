@@ -10,6 +10,7 @@ support types:
  * 4:同步压缩
 
  use:
+   
     Light.getInstance().compress(R.drawable.pic);
 
     Light.getInstance().compress(R.drawable.pic, 75);

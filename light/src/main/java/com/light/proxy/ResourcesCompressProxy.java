@@ -65,28 +65,28 @@ public class ResourcesCompressProxy implements ICompressProxy {
 		return result;
 	}
 
-	public static class Build {
+	public static class Builder {
 		private int resId;
 		private Drawable drawable;
 		private int width;
 		private int height;
 
-		public Build resource(int resId) {
+		public Builder resource(int resId) {
 			this.resId = resId;
 			return this;
 		}
 
-		public Build drawable(Drawable drawable) {
+		public Builder drawable(Drawable drawable) {
 			this.drawable = drawable;
 			return this;
 		}
 
-		public Build width(int width) {
+		public Builder width(int width) {
 			this.width = width;
 			return this;
 		}
 
-		public Build height(int height) {
+		public Builder height(int height) {
 			this.height = height;
 			return this;
 		}

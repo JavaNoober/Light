@@ -73,28 +73,28 @@ public class BytesCompressProxy implements ICompressProxy {
 		return result;
 	}
 
-	public static class Build {
+	public static class Builder {
 		private byte[] bytes;
 		private int width;
 		private int height;
 		private int quality;
 
-		public BytesCompressProxy.Build bytes(byte[] bytes) {
+		public BytesCompressProxy.Builder bytes(byte[] bytes) {
 			this.bytes = bytes;
 			return this;
 		}
 
-		public BytesCompressProxy.Build width(int width) {
+		public BytesCompressProxy.Builder width(int width) {
 			this.width = width;
 			return this;
 		}
 
-		public BytesCompressProxy.Build height(int height) {
+		public BytesCompressProxy.Builder height(int height) {
 			this.height = height;
 			return this;
 		}
 
-		public BytesCompressProxy.Build quality(int quality) {
+		public BytesCompressProxy.Builder quality(int quality) {
 			this.quality = quality;
 			return this;
 		}

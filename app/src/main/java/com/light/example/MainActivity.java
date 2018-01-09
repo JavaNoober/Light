@@ -62,17 +62,20 @@ public class MainActivity extends AppCompatActivity {
 		config.setDefaultQuality(75);
 		Light.getInstance().init(this).setConfig(config);
 
-		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-		byte[] datas = baos.toByteArray();
+//		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//		byte[] datas = baos.toByteArray();
 //		Uri uri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" +R.drawable.d1);
 //		c
 //
 //		L.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节");
 //		L.e("MemorySize", MemoryComputeUtil.getMemorySize(b) + "字节");
 		try {
-			String pathRoot2 = Environment.getExternalStorageDirectory().getCanonicalPath()+"/888.jpg";
+			String pathRoot2 = Environment.getExternalStorageDirectory().getCanonicalPath()+"/img_img.jpg";
+			String path = Environment.getExternalStorageDirectory().getCanonicalPath()+"/img1.jpg";
+			new FileCompressProxy.Build().path(pathRoot2).height(1920).width(1440).quality(73).build().compress(path);
+
 //			Uri uri = Uri.fromFile(new File(pathRoot2));
 //			new ResourcesCompressProxy.Build().resource(R.drawable.test_1920_1200).build()
 //					.compress(pathRoot2);

@@ -61,28 +61,28 @@ public class FileCompressProxy implements ICompressProxy {
 		return result;
 	}
 
-	public static class Build {
+	public static class Builder {
 		private String path;
 		private int width;
 		private int height;
 		private int quality;
 
-		public FileCompressProxy.Build path(String path) {
+		public FileCompressProxy.Builder path(String path) {
 			this.path = path;
 			return this;
 		}
 
-		public FileCompressProxy.Build width(int width) {
+		public FileCompressProxy.Builder width(int width) {
 			this.width = width;
 			return this;
 		}
 
-		public FileCompressProxy.Build height(int height) {
+		public FileCompressProxy.Builder height(int height) {
 			this.height = height;
 			return this;
 		}
 
-		public FileCompressProxy.Build quality(int quality) {
+		public FileCompressProxy.Builder quality(int quality) {
 			this.quality = quality;
 			return this;
 		}

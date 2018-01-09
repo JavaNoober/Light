@@ -32,15 +32,15 @@ public class UriCompressProxy implements ICompressProxy {
 	public boolean compress(String outPath) {
 		if(UriPraser.isLocalFileUri(uri)){
 			String filePath = UriPraser.getPathFromFileUri(uri);
-			compressProxy = new FileCompressProxy.Build().width(width).height(height).quality(quality).path(filePath).build();
+			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
 		}else if(UriPraser.isLocalContentUri(uri)){
 			String filePath = UriPraser.getPathFromContentUri(uri);
-			compressProxy = new FileCompressProxy.Build().width(width).height(height).quality(quality).path(filePath).build();
+			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
 		}else if(UriPraser.isLocalAnroidResourceUri(uri)){
 			try {
 				InputStream input = Light.getInstance().getContext().getContentResolver().openInputStream(uri);
 				Bitmap bitmap = BitmapFactory.decodeStream(input);
-				compressProxy = new BitmapCompressProxy.Build().quality(quality).width(width).height(height).bitmap(bitmap).build();
+				compressProxy = new BitmapCompressProxy.Builder().quality(quality).width(width).height(height).bitmap(bitmap).build();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -77,15 +77,15 @@ public class UriCompressProxy implements ICompressProxy {
 
 		if(UriPraser.isLocalFileUri(uri)){
 			String filePath = UriPraser.getPathFromFileUri(uri);
-			compressProxy = new FileCompressProxy.Build().width(width).height(height).quality(quality).path(filePath).build();
+			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
 		}else if(UriPraser.isLocalContentUri(uri)){
 			String filePath = UriPraser.getPathFromContentUri(uri);
-			compressProxy = new FileCompressProxy.Build().width(width).height(height).quality(quality).path(filePath).build();
+			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
 		}else if(UriPraser.isLocalAnroidResourceUri(uri)){
 			try {
 				InputStream input = Light.getInstance().getContext().getContentResolver().openInputStream(uri);
 				Bitmap bitmap = BitmapFactory.decodeStream(input);
-				compressProxy = new BitmapCompressProxy.Build().width(width).height(height).bitmap(bitmap).build();
+				compressProxy = new BitmapCompressProxy.Builder().width(width).height(height).bitmap(bitmap).build();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -107,7 +107,6 @@ public class UriCompressProxy implements ICompressProxy {
 		private int height;
 		private int quality;
 		private OnCompressFinishListener compressFinishListener;
-
 
 		public Build uri(Uri uri) {
 			this.uri = uri;
