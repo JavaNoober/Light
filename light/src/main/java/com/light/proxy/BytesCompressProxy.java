@@ -26,7 +26,7 @@ public class BytesCompressProxy implements ICompressProxy {
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
 
-	public BytesCompressProxy() {
+	private BytesCompressProxy() {
 		lightConfig = Light.getInstance().getConfig();
 		compressEngine = new LightCompressEngine();
 	}

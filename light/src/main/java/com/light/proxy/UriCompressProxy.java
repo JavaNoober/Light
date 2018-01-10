@@ -93,7 +93,7 @@ public class UriCompressProxy implements ICompressProxy {
 			if(Looper.getMainLooper() == Looper.myLooper()){
 				throw new RuntimeException("network uri can't compressed on UI Thread");
 			}
-//			compressProxy = new FileCompressProxy.Build().width(width).height(height).path().build();
+//			compressProxy = new FileCompressProxy.Builder().width(width).height(height).path().build();
 		}else {
 			return null;
 		}
@@ -101,34 +101,34 @@ public class UriCompressProxy implements ICompressProxy {
 		return compressProxy.compress();
 	}
 
-	public static class Build {
+	public static class Builder {
 		private Uri uri;
 		private int width;
 		private int height;
 		private int quality;
 		private OnCompressFinishListener compressFinishListener;
 
-		public Build uri(Uri uri) {
+		public Builder uri(Uri uri) {
 			this.uri = uri;
 			return this;
 		}
 
-		public Build width(int width) {
+		public Builder width(int width) {
 			this.width = width;
 			return this;
 		}
 
-		public Build height(int height) {
+		public Builder height(int height) {
 			this.height = height;
 			return this;
 		}
 
-		public Build quality(int quality) {
+		public Builder quality(int quality) {
 			this.quality = quality;
 			return this;
 		}
 
-		public Build compressListener(OnCompressFinishListener compressFinishListener) {
+		public Builder compressListener(OnCompressFinishListener compressFinishListener) {
 			this.compressFinishListener = compressFinishListener;
 			return this;
 		}

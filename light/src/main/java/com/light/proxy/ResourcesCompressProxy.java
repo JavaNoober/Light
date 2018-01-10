@@ -26,7 +26,7 @@ public class ResourcesCompressProxy implements ICompressProxy {
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
 
-	public ResourcesCompressProxy() {
+	private ResourcesCompressProxy() {
 		lightConfig = Light.getInstance().getConfig();
 		compressEngine = new LightCompressEngine();
 	}

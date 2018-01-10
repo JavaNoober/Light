@@ -22,7 +22,7 @@ public class BitmapCompressProxy implements ICompressProxy {
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
 
-	public BitmapCompressProxy() {
+	private BitmapCompressProxy() {
 		lightConfig = Light.getInstance().getConfig();
 		compressEngine = new LightCompressEngine();
 	}
