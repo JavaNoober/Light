@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
 		imageView.setImageBitmap(bitmap1);
 		Bitmap bitmap2 = BitmapFactory.decodeFile(path);
 		imageView2.setImageBitmap(bitmap2);
-
+		Light.setImage(imageView, bitmap1);
+		L.e(DisplayUtil.dip2px(this, 800) + "");
 		L.e(MemoryComputeUtil.getMemorySize(bitmap1) + "");
 		L.e(MemoryComputeUtil.getMemorySize(bitmap2) + "");
 	}

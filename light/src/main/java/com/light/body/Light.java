@@ -5,8 +5,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.light.core.Utils.DisplayUtil;
+import com.light.core.Utils.L;
 import com.light.proxy.CompressFactory;
 
 /**
@@ -103,5 +108,23 @@ public class Light {
 			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, object).compress();
 		}
 		return null;
+	}
+
+
+	public static void setImage(final ImageView imageView, Bitmap bitmap){
+		if(Looper.myLooper() != Looper.getMainLooper()){
+			throw new RuntimeException("Only the original thread that created a view hierarchy can touch its views.");
+		}
+		int width = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+		int height =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+		imageView.measure(width,height);
+
+		L.e("height:" + imageView.getMeasuredHeight() + "width: "+ imageView.getMeasuredWidth());
+		new Handler().post(new Runnable() {
+			@Override
+			public void run() {
+
+			}
+		});
 	}
 }
