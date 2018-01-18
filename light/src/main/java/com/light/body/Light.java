@@ -96,7 +96,12 @@ public class Light {
 		return true;
 	}
 
-	public boolean compress(Uri uri){
-		return true;
+	public Bitmap compress(Object object, CompressArgs compressArgs){
+		if(object instanceof String){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, object).compress();
+		}else if(object instanceof Uri){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, object).compress();
+		}
+		return null;
 	}
 }

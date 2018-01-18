@@ -3,6 +3,7 @@ package com.light.example;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,21 +12,29 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.light.body.CompressArgs;
 import com.light.body.Light;
 import com.light.body.LightConfig;
+import com.light.core.Utils.DisplayUtil;
+import com.light.core.Utils.L;
+import com.light.core.Utils.MatrixUtil;
+import com.light.core.Utils.MemoryComputeUtil;
 import com.light.proxy.FileCompressProxy;
 import com.light.proxy.UriCompressProxy;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 	ImageView imageView;
+	ImageView imageView2;
 	Uri imageUri;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		imageView = findViewById(R.id.image);
+		imageView2 = findViewById(R.id.image2);
 		Button button = findViewById(R.id.button);
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -43,36 +52,23 @@ public class MainActivity extends AppCompatActivity {
 		});
 //		Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 //		imageView.setImageBitmap(new MatrixUtil.Builder().bitmap(bitmap2).scale(3, 3).postTranslate(200, 200).build());
+		Light.getInstance().init(this);
 
-		LightConfig config = new LightConfig();
-		config.setMaxFileSize(2222222);
-		config.setDefaultQuality(75);
-		Light.getInstance().init(this).setConfig(config);
 
-//		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_1920_1200);
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//		byte[] datas = baos.toByteArray();
-//		Uri uri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" +R.drawable.d1);
-//		c
-//
-//		L.e("MemorySize", MemoryComputeUtil.getMemorySize(bitmap) + "字节");
-//		L.e("MemorySize", MemoryComputeUtil.getMemorySize(b) + "字节");
-		try {
-			String pathRoot2 = Environment.getExternalStorageDirectory().getCanonicalPath()+"/img_img.jpg";
-			String path = Environment.getExternalStorageDirectory().getCanonicalPath()+"/img1.jpg";
-//			new FileCompressProxy.Build().path(pathRoot2).height(1920).width(1440).quality(73).build().compress(path);
 
-//			Uri uri = Uri.fromFile(new File(pathRoot2));
-//			new ResourcesCompressProxy.Builder().resource(R.drawable.test_1920_1200).build()
-//					.compress(pathRoot2);
-//			Bitmap b = new UriCompressProxy.Builder().uri(uri).width(1024).height(768).build().compress();
-//			imageView.setImageBitmap(b);
-//			L.e("MemorySize", MemoryComputeUtil.getMemorySize(b) + "字节");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		String path  = Environment.getExternalStorageDirectory().getAbsolutePath()+"/pic.jpg";
+		CompressArgs args = new CompressArgs.Builder()
+				.height(DisplayUtil.dip2px(this, 800))
+				.width(DisplayUtil.dip2px(this, 400))
+				.build();
+		Uri uri = Uri.fromFile(new File(path));
+		Bitmap bitmap1 = Light.getInstance().compress(uri, args);
+		imageView.setImageBitmap(bitmap1);
+		Bitmap bitmap2 = BitmapFactory.decodeFile(path);
+		imageView2.setImageBitmap(bitmap2);
 
+		L.e(MemoryComputeUtil.getMemorySize(bitmap1) + "");
+		L.e(MemoryComputeUtil.getMemorySize(bitmap2) + "");
 	}
 
 	@Override

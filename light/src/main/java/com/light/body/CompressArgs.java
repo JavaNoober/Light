@@ -33,7 +33,7 @@ public class CompressArgs {
 		return quality;
 	}
 
-	class Builder {
+	public static class Builder {
 		private int width;
 		private int height;
 		private int quality;
