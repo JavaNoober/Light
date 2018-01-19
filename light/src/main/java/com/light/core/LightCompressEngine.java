@@ -3,33 +3,19 @@ package com.light.core;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
 
 import com.light.body.Light;
-import com.light.body.LightConfig;
 import com.light.compress.LightCompressCore;
 import com.light.compress.NativeCompressCore;
 import com.light.core.Utils.L;
-import com.light.core.Utils.MatrixUtil;
 import com.light.core.Utils.SimpleSizeCompute;
 import com.light.core.listener.ICompressEngine;
-import com.light.core.listener.OnCompressFinishListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.SoftReference;
-import java.util.List;
 import java.util.UUID;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by xiaoqi on 2017/11/21.
@@ -69,7 +55,7 @@ public class LightCompressEngine implements ICompressEngine{
 			L.e(TAG, "sampleSize:"+ options.inSampleSize);
 			return BitmapFactory.decodeFile(imagePath, options);
 		}finally {
-			L.e(TAG, "耗时："+ (System.currentTimeMillis() - start));
+			L.e(TAG, "time:"+ (System.currentTimeMillis() - start));
 		}
 	}
 
@@ -92,7 +78,7 @@ public class LightCompressEngine implements ICompressEngine{
 			InputStream is = Light.getInstance().getResources().openRawResource(resId);
 			return BitmapFactory.decodeStream(is,null,options);
 		}finally {
-			L.e("MemorySize", "耗时："+ (System.currentTimeMillis() - start));
+			L.e("MemorySize", "time:"+ (System.currentTimeMillis() - start));
 		}
 	}
 
@@ -129,7 +115,7 @@ public class LightCompressEngine implements ICompressEngine{
 					e.printStackTrace();
 				}
 			}
-			L.e("MemorySize", "耗时："+ (System.currentTimeMillis() - start));
+			L.e("MemorySize", "time:"+ (System.currentTimeMillis() - start));
 		}
 	}
 
@@ -152,31 +138,31 @@ public class LightCompressEngine implements ICompressEngine{
 
 
 
-	public void compress(List<String> pathList, String outputPath, int fileSize,
-	                     final OnCompressFinishListener listener) {
-		Observable.fromIterable(pathList)
-				.map(new Function<String, Boolean>() {
-					@Override
-					public Boolean apply(String path) throws Exception {
-						File file = new File(path);
-						if(file.isDirectory()){
-							throw new RuntimeException("This path does not refer to a file");
-						}
-//						if(file.length() < ){
-//
+//	public void compress(List<String> pathList, String outputPath, int fileSize,
+//	                     final OnCompressFinishListener listener) {
+//		Observable.fromIterable(pathList)
+//				.map(new Function<String, Boolean>() {
+//					@Override
+//					public Boolean apply(String path) throws Exception {
+//						File file = new File(path);
+//						if(file.isDirectory()){
+//							throw new RuntimeException("This path does not refer to a file");
 //						}
-						return true;
-					}
-				}).subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.ignoreElements()
-				.subscribe(new Action() {
-					@Override
-					public void run() throws Exception {
-						if(listener != null){
-							listener.onFinish(null);
-						}
-					}
-				});
-	}
+////						if(file.length() < ){
+////
+////						}
+//						return true;
+//					}
+//				}).subscribeOn(Schedulers.io())
+//				.observeOn(AndroidSchedulers.mainThread())
+//				.ignoreElements()
+//				.subscribe(new Action() {
+//					@Override
+//					public void run() throws Exception {
+//						if(listener != null){
+//							listener.onFinish(null);
+//						}
+//					}
+//				});
+//	}
 }

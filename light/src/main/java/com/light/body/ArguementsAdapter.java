@@ -1,7 +1,6 @@
 package com.light.body;
 
 import com.light.core.listener.ICompressProxy;
-import com.light.proxy.BitmapCompressProxy;
 import com.light.proxy.CompressFactory;
 
 /**

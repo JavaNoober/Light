@@ -5,14 +5,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.light.core.Utils.ContextUtil;
 import com.light.core.Utils.DisplayUtil;
-import com.light.core.Utils.L;
 import com.light.proxy.CompressFactory;
 
 /**

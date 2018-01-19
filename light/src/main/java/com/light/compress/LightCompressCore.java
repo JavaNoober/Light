@@ -33,7 +33,7 @@ public class LightCompressCore {
 				return saveBitmap(bit, quality, fileName);
 			}finally {
 				long time = System.currentTimeMillis() - startTime;
-				Log.e("Light", "JNI耗时:" + time);
+				Log.e("Light", "JNI time:" + time);
 			}
 		}else {
 			Bitmap result = null;
@@ -47,7 +47,7 @@ public class LightCompressCore {
 				long time = System.currentTimeMillis() - startTime;
 				if(result != null){
 					result.recycle();
-					Log.e("Light", "JNI耗时:" + time);
+					Log.e("Light", "JNI time:" + time);
 				}
 			}
 		}
@@ -63,13 +63,13 @@ public class LightCompressCore {
 
 	/**
 	 *
-	 * @param bit bitmap图像
-	 * @param w 要生成图片的宽度
-	 * @param h 要生成图片的高度
-	 * @param quality 压缩质量比例
-	 * @param fileNameBytes 压缩后保存路径
-	 * @param optimize 是否开启最优压缩
-	 * @return true:压缩成功，false:压缩失败
+	 * @param bit bitmap
+	 * @param w the width of image to generate
+	 * @param h the height of image to generate
+	 * @param quality the quality of compress
+	 * @param fileNameBytes out path
+	 * @param optimize Whether or not the optimal compression is opened
+	 * @return true:success
 	 */
 	private static native boolean compressBitmap(Bitmap bit, int w, int h, int quality, byte[] fileNameBytes, boolean
 			optimize);

@@ -1,11 +1,5 @@
 package com.light.body;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-
-import com.light.core.listener.ICompressProxy;
-import com.light.proxy.CompressFactory;
 
 /**
  * Created by xiaoqi on 2018/1/10.
