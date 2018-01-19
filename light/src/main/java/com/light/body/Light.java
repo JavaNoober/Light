@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.light.core.Utils.ContextUtil;
 import com.light.core.Utils.DisplayUtil;
 import com.light.core.Utils.L;
 import com.light.proxy.CompressFactory;
@@ -28,7 +29,8 @@ public class Light {
 	private Resources resources;
 
 	private Light(){
-
+		applicationContext = ContextUtil.get();
+		resources = applicationContext.getResources();
 	}
 
 	public static Light getInstance(){
@@ -62,12 +64,6 @@ public class Light {
 		return config;
 	}
 
-	public Light init(Context context){
-		this.applicationContext = context.getApplicationContext();
-		this.resources = applicationContext.getResources();
-		return this;
-	}
-
 	public Context getContext() {
 		return applicationContext;
 	}
@@ -76,55 +72,153 @@ public class Light {
 		return resources;
 	}
 
-
-	public static boolean compress(Uri uri, CompressArgs compressArgs, String outPath){
-		return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, uri).compress(outPath);
+	public boolean compress(Uri uri, String outPath){
+		return compressImage(uri, null, outPath);
 	}
 
-	public boolean compress(String path){
-		return true;
+	public boolean compress(String path, String outPath){
+		return compressImage(path, null, outPath);
 	}
 
-	public boolean compress(Bitmap bitmap){
-		return true;
+	public boolean compress(Bitmap bitmap, String outPath){
+		return compressImage(bitmap, null, outPath);
 	}
 
-	public boolean compress(byte[] bytes){
-		return true;
+	public boolean compress(byte[] bytes, String outPath){
+		return compressImage(bytes, null, outPath);
 	}
 
-	public boolean compress(int resId){
-		return true;
+	public boolean compress(int resId, String outPath){
+		return compressImage(resId, null, outPath);
 	}
 
-	public boolean compress(Drawable drawable){
-		return true;
+	public boolean compress(Drawable drawable, String outPath){
+		return compressImage(drawable, null, outPath);
 	}
 
-	public Bitmap compress(Object object, CompressArgs compressArgs){
-		if(object instanceof String){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, object).compress();
-		}else if(object instanceof Uri){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, object).compress();
+	public boolean compress(Uri uri, CompressArgs compressArgs, String outPath){
+		return compressImage(uri, compressArgs, outPath);
+	}
+
+	public boolean compress(String path, CompressArgs compressArgs, String outPath){
+		return compressImage(path, compressArgs, outPath);
+	}
+
+	public boolean compress(Bitmap bitmap, CompressArgs compressArgs, String outPath){
+		return compressImage(bitmap, compressArgs, outPath);
+	}
+
+	public boolean compress(byte[] bytes, CompressArgs compressArgs, String outPath){
+		return compressImage(bytes, compressArgs, outPath);
+	}
+
+	public boolean compress(int resId, CompressArgs compressArgs, String outPath){
+		return compressImage(resId, compressArgs, outPath);
+	}
+
+	public boolean compress(Drawable drawable, CompressArgs compressArgs, String outPath){
+		return compressImage(drawable, compressArgs, outPath);
+	}
+
+	private boolean compressImage(Object imageSource, CompressArgs compressArgs, String outPath){
+		if(outPath == null){
+			throw new NullPointerException("OutPath is Null!");
 		}
-		return null;
+		if(imageSource instanceof String){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, imageSource).compress(outPath);
+		}else if(imageSource instanceof Uri){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, imageSource).compress(outPath);
+		}else if(imageSource instanceof Bitmap){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bitmap, imageSource).compress(outPath);
+		}else if(imageSource instanceof byte[]){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bytes, imageSource).compress(outPath);
+		}else if(imageSource instanceof Drawable || imageSource instanceof Integer){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Resource, imageSource).compress(outPath);
+		}else {
+			throw new RuntimeException("Only support image types are String, Uri, Bitmap, byte[], Drawable and " +
+					"drawable resourceId");
+		}
 	}
 
 
-	public static void setImage(final ImageView imageView, Bitmap bitmap){
+	public Bitmap compress(Uri uri, CompressArgs compressArgs){
+		return compressImage(uri, compressArgs);
+	}
+
+	public Bitmap compress(String path, CompressArgs compressArgs){
+		return compressImage(path, compressArgs);
+	}
+
+	public Bitmap compress(Bitmap bitmap, CompressArgs compressArgs){
+		return compressImage(bitmap, compressArgs);
+	}
+
+	public Bitmap compress(byte[] bytes, CompressArgs compressArgs){
+		return compressImage(bytes, compressArgs);
+	}
+
+	public Bitmap compress(int resId, CompressArgs compressArgs){
+		return compressImage(resId, compressArgs);
+	}
+
+	public Bitmap compress(Drawable drawable, CompressArgs compressArgs){
+		return compressImage(drawable, compressArgs);
+	}
+
+	public Bitmap compress(Uri uri){
+		return compressImage(uri, null);
+	}
+
+	public Bitmap compress(String path){
+		return compressImage(path, null);
+	}
+
+	public Bitmap compress(Bitmap bitmap){
+		return compressImage(bitmap, null);
+	}
+
+	public Bitmap compress(byte[] bytes){
+		return compressImage(bytes, null);
+	}
+
+	public Bitmap compress(int resId){
+		return compressImage(resId, null);
+	}
+
+	public Bitmap compress(Drawable drawable){
+		return compressImage(drawable, null);
+	}
+
+	private Bitmap compressImage(Object imageSource, CompressArgs compressArgs){
+		if(imageSource instanceof String){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, imageSource).compress();
+		}else if(imageSource instanceof Uri){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, imageSource).compress();
+		}else if(imageSource instanceof Bitmap){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bitmap, imageSource).compress();
+		}else if(imageSource instanceof byte[]){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bytes, imageSource).compress();
+		}else if(imageSource instanceof Drawable || imageSource instanceof Integer){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Resource, imageSource).compress();
+		}else {
+			throw new RuntimeException("Only support image types are String, Uri, Bitmap, byte[], Drawable and " +
+					"drawable resourceId");
+		}
+	}
+
+	public static void setImage(final ImageView imageView, Object imageSource){
+		int[] size = DisplayUtil.getViewSize(imageView);
+		CompressArgs args = new CompressArgs.Builder()
+				.height(size[1])
+				.width(size[0])
+				.build();
+		setImage(imageView, args, imageSource);
+	}
+
+	public static void setImage(final ImageView imageView, CompressArgs args, Object imageSource){
 		if(Looper.myLooper() != Looper.getMainLooper()){
 			throw new RuntimeException("Only the original thread that created a view hierarchy can touch its views.");
 		}
-		int width = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-		int height =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-		imageView.measure(width,height);
-
-		L.e("height:" + imageView.getMeasuredHeight() + "width: "+ imageView.getMeasuredWidth());
-		new Handler().post(new Runnable() {
-			@Override
-			public void run() {
-
-			}
-		});
+		imageView.setImageBitmap(Light.getInstance().compressImage(imageSource, args));
 	}
 }

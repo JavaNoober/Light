@@ -39,10 +39,6 @@ public class MainActivity extends AppCompatActivity {
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Intent intent = new Intent(Intent.ACTION_PICK,
-//						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//				startActivityForResult(intent, 1);
-//
 				imageUri = getContentResolver().insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 						new ContentValues());
 				Intent takePhotoIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -50,26 +46,11 @@ public class MainActivity extends AppCompatActivity {
 				startActivityForResult(takePhotoIntent, 1);
 			}
 		});
-//		Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-//		imageView.setImageBitmap(new MatrixUtil.Builder().bitmap(bitmap2).scale(3, 3).postTranslate(200, 200).build());
-		Light.getInstance().init(this);
-
-
-
 		String path  = Environment.getExternalStorageDirectory().getAbsolutePath()+"/pic.jpg";
-		CompressArgs args = new CompressArgs.Builder()
-				.height(DisplayUtil.dip2px(this, 800))
-				.width(DisplayUtil.dip2px(this, 400))
-				.build();
-		Uri uri = Uri.fromFile(new File(path));
-		Bitmap bitmap1 = Light.getInstance().compress(uri, args);
-		imageView.setImageBitmap(bitmap1);
+		Light.setImage(imageView, path);
 		Bitmap bitmap2 = BitmapFactory.decodeFile(path);
 		imageView2.setImageBitmap(bitmap2);
-		Light.setImage(imageView, bitmap1);
-		L.e(DisplayUtil.dip2px(this, 800) + "");
-		L.e(MemoryComputeUtil.getMemorySize(bitmap1) + "");
-		L.e(MemoryComputeUtil.getMemorySize(bitmap2) + "");
+
 	}
 
 	@Override

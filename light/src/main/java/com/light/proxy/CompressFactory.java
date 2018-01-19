@@ -15,7 +15,7 @@ import com.light.core.listener.ICompressProxy;
 public class CompressFactory {
 
 	public enum Compress {
-		Bitmap, Bytes, File, Resource, Uri;
+		Bitmap, Bytes, File, Resource, Uri
 	}
 
 	public static ICompressProxy createCompress(Compress compressCategory, CompressArgs compressArgs, Object object) {

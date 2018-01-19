@@ -16,7 +16,7 @@ public class ArguementsAdapter {
 		this.compressArgs = compressArgs;
 	}
 
-	public ICompressProxy getCompressProxy(CompressFactory.Compress compressCategory, Object imgOurce){
-		return CompressFactory.createCompress(compressCategory, compressArgs, imgOurce);
+	public ICompressProxy getCompressProxy(CompressFactory.Compress compressCategory, Object imageSource){
+		return CompressFactory.createCompress(compressCategory, compressArgs, imageSource);
 	}
 }
