@@ -13,7 +13,7 @@ import com.light.core.listener.ICompressProxy;
 import java.io.File;
 
 /**
- * Created by xiaoqi on 2017/11/25.
+ * Created by xiaoqi on 2017/11/25
  */
 
 public class FileCompressProxy implements ICompressProxy {

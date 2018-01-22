@@ -1,11 +1,11 @@
 package com.light.body;
 
-
+import com.light.core.Utils.DisplayUtil;
 
 import java.io.Serializable;
 
 /**
- * Created by xiaoqi on 2017/11/21.
+ * Created by xiaoqi on 2017/11/21
  */
 
 public class LightConfig implements Serializable{
@@ -21,6 +21,11 @@ public class LightConfig implements Serializable{
 	private int maxHeight;
 
 	private int defaultQuality = 85;
+
+	public LightConfig(){
+		maxWidth = DisplayUtil.getScreenWidth(Light.getInstance().getContext());
+		maxHeight = DisplayUtil.getScreenHeight(Light.getInstance().getContext());
+	}
 
 	public LightConfig setMaxFileSize(int maxFileSize) {
 		this.maxFileSize = maxFileSize;

@@ -6,7 +6,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 /**
- * Created by xiaoqi on 2017/11/21.
+ * Created by xiaoqi on 2017/11/21
  */
 
 public class LightCompressCore {

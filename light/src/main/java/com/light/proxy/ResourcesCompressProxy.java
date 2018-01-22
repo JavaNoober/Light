@@ -14,7 +14,7 @@ import com.light.core.listener.ICompressProxy;
 
 
 /**
- * Created by xiaoqi on 2017/11/25.
+ * Created by xiaoqi on 2017/11/25
  */
 
 public class ResourcesCompressProxy implements ICompressProxy {

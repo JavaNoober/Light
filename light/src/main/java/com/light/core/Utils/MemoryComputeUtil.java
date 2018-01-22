@@ -11,7 +11,7 @@ import com.light.body.Light;
 public class MemoryComputeUtil {
 	private final static String TAG = Light.TAG + "-MemoryComputeUtil";
 
-
+	//单位kb
 	public static int getMemorySize(Bitmap bitmap){
 		Bitmap.Config config = bitmap.getConfig();
 		int width = bitmap.getWidth();
@@ -29,6 +29,10 @@ public class MemoryComputeUtil {
 			totalSize = width * height * 4;
 		}
 		L.e(TAG, "totalMemorySize:"+ totalSize / 1024 +"kb");
-		return totalSize;
+		return totalSize / 1024;
+	}
+
+	public static int getMemorySize2(Bitmap bitmap){
+		return bitmap.getByteCount();
 	}
 }

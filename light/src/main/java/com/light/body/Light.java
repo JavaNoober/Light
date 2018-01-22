@@ -12,9 +12,10 @@ import com.light.core.Utils.ContextUtil;
 import com.light.core.Utils.DisplayUtil;
 import com.light.proxy.CompressFactory;
 
+import java.io.File;
+
 /**
  * Created by xiaoqi on 2017/11/21.
- *
  */
 
 public class Light {
@@ -77,6 +78,10 @@ public class Light {
 		return compressImage(path, null, outPath);
 	}
 
+	public boolean compress(File file, String outPath){
+		return compressImage(file.getAbsolutePath(), null, outPath);
+	}
+
 	public boolean compress(Bitmap bitmap, String outPath){
 		return compressImage(bitmap, null, outPath);
 	}
@@ -99,6 +104,10 @@ public class Light {
 
 	public boolean compress(String path, CompressArgs compressArgs, String outPath){
 		return compressImage(path, compressArgs, outPath);
+	}
+
+	public boolean compress(File file, CompressArgs compressArgs, String outPath){
+		return compressImage(file.getAbsolutePath(), compressArgs, outPath);
 	}
 
 	public boolean compress(Bitmap bitmap, CompressArgs compressArgs, String outPath){
@@ -146,6 +155,10 @@ public class Light {
 		return compressImage(path, compressArgs);
 	}
 
+	public Bitmap compress(File file, CompressArgs compressArgs){
+		return compressImage(file.getAbsolutePath(), compressArgs);
+	}
+
 	public Bitmap compress(Bitmap bitmap, CompressArgs compressArgs){
 		return compressImage(bitmap, compressArgs);
 	}
@@ -170,6 +183,10 @@ public class Light {
 		return compressImage(path, null);
 	}
 
+	public Bitmap compress(File file){
+		return compressImage(file.getAbsolutePath(), null);
+	}
+
 	public Bitmap compress(Bitmap bitmap){
 		return compressImage(bitmap, null);
 	}
@@ -187,7 +204,9 @@ public class Light {
 	}
 
 	private Bitmap compressImage(Object imageSource, CompressArgs compressArgs){
-		if(imageSource instanceof String){
+		if(imageSource instanceof File){
+			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, ((File) imageSource).getAbsolutePath()).compress();
+		}else if(imageSource instanceof String){
 			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, imageSource).compress();
 		}else if(imageSource instanceof Uri){
 			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, imageSource).compress();

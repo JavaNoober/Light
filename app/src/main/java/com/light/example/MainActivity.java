@@ -5,75 +5,94 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.light.body.CompressArgs;
 import com.light.body.Light;
 import com.light.body.LightConfig;
-import com.light.core.Utils.DisplayUtil;
-import com.light.core.Utils.L;
-import com.light.core.Utils.MatrixUtil;
 import com.light.core.Utils.MemoryComputeUtil;
-import com.light.proxy.FileCompressProxy;
-import com.light.proxy.UriCompressProxy;
+import com.light.core.Utils.UriPraser;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-	ImageView imageView;
-	ImageView imageView2;
+	ImageView ivCompress;
+	TextView tvInfo;
 	Uri imageUri;
+//	String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/pic.jpg";
+	final static String info = "原图片:\n高度：%d，宽度：%d，占用内存：%dKB\n显示的图片(压缩后)：\n高度：%d, 宽度：%d，占用内存：%dKB";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		imageView = findViewById(R.id.image);
-		imageView2 = findViewById(R.id.image2);
-		Button button = findViewById(R.id.button);
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				imageUri = getContentResolver().insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-						new ContentValues());
-				Intent takePhotoIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-				takePhotoIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,imageUri);
-				startActivityForResult(takePhotoIntent, 1);
-			}
-		});
-		String path  = Environment.getExternalStorageDirectory().getAbsolutePath()+"/pic.jpg";
-		Light.setImage(imageView, path);
-		Bitmap bitmap2 = BitmapFactory.decodeFile(path);
-		imageView2.setImageBitmap(bitmap2);
+		ivCompress = findViewById(R.id.image_compress);
+		tvInfo = findViewById(R.id.tv_info);
 
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-//		ContentResolver resolver = getContentResolver();
-		Uri originalUri = data.getData(); // 获得图片的uri
-//		try {
-//			Bitmap bm = MediaStore.Images.Media.getBitmap(resolver,
-//					originalUri);
-//			String[] proj = { MediaStore.Images.Media.DATA };
-//			Cursor cursor = managedQuery(originalUri, proj, null, null,
-//					null);
-//			int column_index = cursor
-//					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//			cursor.moveToFirst();
-//			final String path = cursor.getString(column_index);
-//			System.out.println(path);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		Bitmap b = new UriCompressProxy.Builder().uri(originalUri).width(1024).height(768).build().compress();
-		imageView.setImageBitmap(b);
-//		imageView.setImageURI(originalUri);
+		if(requestCode == 1 && imageUri != null) {
+			//效果同下
+//			Light.setImage(ivCompress, imageUri);
+			Bitmap compressBitmap = Light.getInstance().compress(imageUri);
+			ivCompress.setImageBitmap(compressBitmap);
+
+			//系统获取图片的方法
+			String path = UriPraser.getPathFromContentUri(imageUri);
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeFile(path, options);
+			Bitmap bitmap2 = BitmapFactory.decodeFile(path);
+			tvInfo.setText(String.format(Locale.CHINA, info, options.outHeight, options.outWidth,
+					MemoryComputeUtil.getMemorySize(bitmap2), compressBitmap.getHeight(),
+					compressBitmap.getWidth(), MemoryComputeUtil.getMemorySize(compressBitmap)));
+			bitmap2.recycle();
+		}else if(requestCode == 2 && data != null){
+			Uri imageUri = data.getData();
+			String path = UriPraser.getPathFromContentUri(imageUri);
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeFile(path, options);
+			Bitmap compressBitmap = Light.getInstance().compress(imageUri);
+			ivCompress.setImageBitmap(compressBitmap);
+			Bitmap bitmap2 = BitmapFactory.decodeFile(path);
+			tvInfo.setText(String.format(Locale.CHINA, info, options.outHeight, options.outWidth,
+					MemoryComputeUtil.getMemorySize(bitmap2), compressBitmap.getHeight(),
+					compressBitmap.getWidth(), MemoryComputeUtil.getMemorySize(compressBitmap)));
+			bitmap2.recycle();
+		}
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add("相册");
+		menu.add("拍照");
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if("相册".equals(item.getTitle())){
+			Intent intent = new Intent();
+			intent.setAction(Intent.ACTION_PICK);
+			intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			startActivityForResult(intent, 2);
+		}else if("拍照".equals(item.getTitle())){
+			imageUri = getContentResolver().insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+					new ContentValues());
+			Intent takePhotoIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			takePhotoIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
+			startActivityForResult(takePhotoIntent, 1);
+		}
+		return true;
 	}
 }

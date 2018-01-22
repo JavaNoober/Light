@@ -10,7 +10,7 @@ import com.light.core.listener.ICompressEngine;
 import com.light.core.listener.ICompressProxy;
 
 /**
- * Created by xiaoqi on 2017/11/25.
+ * Created by xiaoqi on 2017/11/25
  */
 
 public class BitmapCompressProxy implements ICompressProxy {
@@ -58,6 +58,7 @@ public class BitmapCompressProxy implements ICompressProxy {
 		private Bitmap bitmap;
 		private int width;
 		private int height;
+		private boolean fixedSize;
 
 		public BitmapCompressProxy.Builder bitmap(Bitmap bitmap) {
 			this.bitmap = bitmap;

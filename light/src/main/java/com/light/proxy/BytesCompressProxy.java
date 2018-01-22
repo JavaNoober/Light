@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by xiaoqi on 2017/11/25.
+ * Created by xiaoqi on 2017/11/25
  */
 
 public class BytesCompressProxy implements ICompressProxy {

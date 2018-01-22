@@ -16,7 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
- * Created by xiaoqi on 2017/11/25.
+ * Created by xiaoqi on 2017/11/25
  */
 
 public class UriCompressProxy implements ICompressProxy {

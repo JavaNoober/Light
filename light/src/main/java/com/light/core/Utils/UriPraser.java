@@ -153,7 +153,7 @@ public class UriPraser {
 		if (cursor != null) {
 			cursor.moveToFirst();
 			int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-			if(idx > 0){
+			if(idx >= 0){
 				result = cursor.getString(idx);
 			}
 			cursor.close();
