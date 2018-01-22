@@ -59,7 +59,7 @@ public class UriCompressProxy implements ICompressProxy {
 	}
 
 
-	//TODO
+	//TODO 从网络下载图片
 	private void compress(String outPath, OnCompressFinishListener compressFinishListener) {
 		if(UriPraser.isNetworkUri(uri)) {
 			if (Looper.getMainLooper() == Looper.myLooper()) {

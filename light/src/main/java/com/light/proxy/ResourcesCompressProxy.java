@@ -34,6 +34,9 @@ public class ResourcesCompressProxy implements ICompressProxy {
 	@Override
 	public boolean compress(String outPath) {
 		Bitmap result = compress();
+		if(outPath == null){
+			outPath = lightConfig.getOutputRootDir();
+		}
 		return compressEngine.compress2File(result, outPath, lightConfig.getDefaultQuality());
 	}
 

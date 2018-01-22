@@ -36,6 +36,9 @@ public class BytesCompressProxy implements ICompressProxy {
 		if(quality <= 0 || quality > 100){
 			quality = lightConfig.getDefaultQuality();
 		}
+		if(outPath == null){
+			outPath = lightConfig.getOutputRootDir();
+		}
 		return compressEngine.compress2File(compress(), outPath, quality);
 	}
 
