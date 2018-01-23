@@ -131,15 +131,15 @@ public class Light {
 			throw new NullPointerException("OutPath is Null!");
 		}
 		if(imageSource instanceof String){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, imageSource).compress(outPath);
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, imageSource).compress(outPath);
 		}else if(imageSource instanceof Uri){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, imageSource).compress(outPath);
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, imageSource).compress(outPath);
 		}else if(imageSource instanceof Bitmap){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bitmap, imageSource).compress(outPath);
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bitmap, imageSource).compress(outPath);
 		}else if(imageSource instanceof byte[]){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bytes, imageSource).compress(outPath);
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bytes, imageSource).compress(outPath);
 		}else if(imageSource instanceof Drawable || imageSource instanceof Integer){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Resource, imageSource).compress(outPath);
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Resource, imageSource).compress(outPath);
 		}else {
 			throw new RuntimeException("Only support image types are String, Uri, Bitmap, byte[], Drawable and " +
 					"drawable resourceId");
@@ -205,17 +205,17 @@ public class Light {
 
 	private Bitmap compressImage(Object imageSource, CompressArgs compressArgs){
 		if(imageSource instanceof File){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, ((File) imageSource).getAbsolutePath()).compress();
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, ((File) imageSource).getAbsolutePath()).compress();
 		}else if(imageSource instanceof String){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, imageSource).compress();
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, imageSource).compress();
 		}else if(imageSource instanceof Uri){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, imageSource).compress();
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Uri, imageSource).compress();
 		}else if(imageSource instanceof Bitmap){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bitmap, imageSource).compress();
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bitmap, imageSource).compress();
 		}else if(imageSource instanceof byte[]){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bytes, imageSource).compress();
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Bytes, imageSource).compress();
 		}else if(imageSource instanceof Drawable || imageSource instanceof Integer){
-			return new ArguementsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Resource, imageSource).compress();
+			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.Resource, imageSource).compress();
 		}else {
 			throw new RuntimeException("Only support image types are String, Uri, Bitmap, byte[], Drawable and " +
 					"drawable resourceId");

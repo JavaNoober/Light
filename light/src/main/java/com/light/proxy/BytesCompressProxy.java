@@ -25,6 +25,7 @@ public class BytesCompressProxy implements ICompressProxy {
 	private int quality;
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
+	private boolean needIgnoreSize;
 
 	private BytesCompressProxy() {
 		lightConfig = Light.getInstance().getConfig();
@@ -46,7 +47,7 @@ public class BytesCompressProxy implements ICompressProxy {
 	public Bitmap compress() {
 		int resultWidth;
 		int resultHeight;
-		if(width > 0 && height >0){
+		if(!needIgnoreSize && width > 0 && height >0){
 			resultWidth = width;
 			resultHeight = height;
 		}else {
@@ -56,8 +57,14 @@ public class BytesCompressProxy implements ICompressProxy {
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inJustDecodeBounds = true;
 				BitmapFactory.decodeStream(input, null, options);
-				resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
-				resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
+				if(needIgnoreSize){
+					resultWidth = options.outWidth;
+					resultHeight = options.outHeight;
+				}else {
+					resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
+					resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
+				}
+
 			}finally {
 				if(input != null){
 					try {
@@ -81,24 +88,30 @@ public class BytesCompressProxy implements ICompressProxy {
 		private int width;
 		private int height;
 		private int quality;
+		private boolean ignoreSize;
 
-		public BytesCompressProxy.Builder bytes(byte[] bytes) {
+		public Builder bytes(byte[] bytes) {
 			this.bytes = bytes;
 			return this;
 		}
 
-		public BytesCompressProxy.Builder width(int width) {
+		public Builder width(int width) {
 			this.width = width;
 			return this;
 		}
 
-		public BytesCompressProxy.Builder height(int height) {
+		public Builder height(int height) {
 			this.height = height;
 			return this;
 		}
 
-		public BytesCompressProxy.Builder quality(int quality) {
+		public Builder quality(int quality) {
 			this.quality = quality;
+			return this;
+		}
+
+		public Builder ignoreSize(boolean ignoreSize) {
+			this.ignoreSize = ignoreSize;
 			return this;
 		}
 
@@ -111,6 +124,7 @@ public class BytesCompressProxy implements ICompressProxy {
 			proxy.height = height;
 			proxy.bytes = bytes;
 			proxy.quality = quality;
+			proxy.needIgnoreSize = ignoreSize;
 			return proxy;
 		}
 	}

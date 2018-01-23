@@ -21,6 +21,7 @@ public class BitmapCompressProxy implements ICompressProxy {
 	private int quality;
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
+	private boolean needIgnoreSize;
 
 	private BitmapCompressProxy() {
 		lightConfig = Light.getInstance().getConfig();
@@ -42,12 +43,15 @@ public class BitmapCompressProxy implements ICompressProxy {
 	public Bitmap compress() {
 		int resultWidth;
 		int resultHeight;
-		if(width > 0 && height >0){
+		if(!needIgnoreSize && width > 0 && height >0){
 			resultWidth = width;
 			resultHeight = height;
-		}else {
+		}else if(!needIgnoreSize){
 			resultWidth = Math.min(lightConfig.getMaxWidth(), bitmap.getWidth());
 			resultHeight = Math.min(lightConfig.getMaxHeight(), bitmap.getHeight());
+		}else {
+			resultWidth = bitmap.getWidth();
+			resultHeight = bitmap.getHeight();
 		}
 		Bitmap result = compressEngine.compress2Bitmap(bitmap, resultWidth, resultHeight);
 		float scaleSize = MatrixUtil.getScale(resultWidth, resultHeight, result.getWidth(), result.getHeight());
@@ -61,25 +65,30 @@ public class BitmapCompressProxy implements ICompressProxy {
 		private Bitmap bitmap;
 		private int width;
 		private int height;
-		private boolean fixedSize;
+		private boolean ignoreSize;
 
-		public BitmapCompressProxy.Builder bitmap(Bitmap bitmap) {
+		public Builder bitmap(Bitmap bitmap) {
 			this.bitmap = bitmap;
 			return this;
 		}
 
-		public BitmapCompressProxy.Builder width(int width) {
+		public Builder width(int width) {
 			this.width = width;
 			return this;
 		}
 
-		public BitmapCompressProxy.Builder height(int height) {
+		public Builder height(int height) {
 			this.height = height;
 			return this;
 		}
 
-		public BitmapCompressProxy.Builder quality(int quality) {
+		public Builder quality(int quality) {
 			this.height = quality;
+			return this;
+		}
+
+		public Builder ignoreSize(boolean ignoreSize) {
+			this.ignoreSize = ignoreSize;
 			return this;
 		}
 
@@ -91,6 +100,7 @@ public class BitmapCompressProxy implements ICompressProxy {
 			proxy.width = width;
 			proxy.height = height;
 			proxy.bitmap = bitmap;
+			proxy.needIgnoreSize = ignoreSize;
 			return proxy;
 		}
 	}

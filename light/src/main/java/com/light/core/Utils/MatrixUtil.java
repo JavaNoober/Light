@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.support.annotation.Nullable;
 
 /**
- * Created by xiaoqi on 2017/11/21.
+ * Created by xiaoqi on 2017/11/21
  */
 
 public class MatrixUtil {

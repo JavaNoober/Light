@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import java.util.List;
 
 /**
- * Created by xiaoqi on 2017/11/22.
+ * Created by xiaoqi on 2017/11/22
  */
 
 public interface ICompressEngine {

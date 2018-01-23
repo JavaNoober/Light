@@ -18,8 +18,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 /**
- * Created by xiaoqi on 2017/11/21.
- *
+ * Created by xiaoqi on 2017/11/21
  */
 
 public class LightCompressEngine implements ICompressEngine{

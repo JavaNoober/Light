@@ -25,6 +25,7 @@ public class ResourcesCompressProxy implements ICompressProxy {
 	private int height;
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
+	private boolean needIgnoreSize;
 
 	private ResourcesCompressProxy() {
 		lightConfig = Light.getInstance().getConfig();
@@ -44,19 +45,30 @@ public class ResourcesCompressProxy implements ICompressProxy {
 	public Bitmap compress() {
 		int resultWidth;
 		int resultHeight;
-		if(width > 0 && height >0){
+		if(!needIgnoreSize && width > 0 && height >0){
 			resultWidth = width;
 			resultHeight = height;
 		}else {
 			if(drawable != null){
-				resultWidth = Math.min(lightConfig.getMaxWidth(), drawable.getIntrinsicWidth());
-				resultHeight = Math.min(lightConfig.getMaxHeight(), drawable.getIntrinsicHeight());
+				if(needIgnoreSize){
+					resultWidth = drawable.getIntrinsicWidth();
+					resultHeight = drawable.getIntrinsicHeight();
+				}else {
+					resultWidth = Math.min(lightConfig.getMaxWidth(), drawable.getIntrinsicWidth());
+					resultHeight = Math.min(lightConfig.getMaxHeight(), drawable.getIntrinsicHeight());
+				}
 			}else {
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inJustDecodeBounds = true;
 				BitmapFactory.decodeResource(Light.getInstance().getResources(), resId, options);
-				resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
-				resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
+				if(needIgnoreSize){
+					resultWidth = options.outWidth;
+					resultHeight = options.outHeight;
+				}else {
+					resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
+					resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
+				}
+
 			}
 		}
 		L.i(TAG, "finalWidth:"+resultWidth+" finalHeight:"+resultHeight);
@@ -73,6 +85,7 @@ public class ResourcesCompressProxy implements ICompressProxy {
 		private Drawable drawable;
 		private int width;
 		private int height;
+		private boolean ignoreSize;
 
 		public Builder resource(int resId) {
 			this.resId = resId;
@@ -94,6 +107,11 @@ public class ResourcesCompressProxy implements ICompressProxy {
 			return this;
 		}
 
+		public Builder ignoreSize(boolean ignoreSize) {
+			this.ignoreSize = ignoreSize;
+			return this;
+		}
+
 		public ResourcesCompressProxy build(){
 			if(resId == 0 && drawable == null){
 				throw new RuntimeException("resource is not exists");
@@ -103,6 +121,7 @@ public class ResourcesCompressProxy implements ICompressProxy {
 			proxy.height = height;
 			proxy.resId = resId;
 			proxy.drawable = drawable;
+			proxy.needIgnoreSize = ignoreSize;
 			return proxy;
 		}
 	}

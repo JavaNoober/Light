@@ -22,6 +22,8 @@ public class LightConfig implements Serializable{
 
 	private int defaultQuality = 85;
 
+	private boolean needIgnoreSize = false;
+
 	public LightConfig(){
 		maxWidth = DisplayUtil.getScreenWidth(Light.getInstance().getContext());
 		maxHeight = DisplayUtil.getScreenHeight(Light.getInstance().getContext());
@@ -69,4 +71,11 @@ public class LightConfig implements Serializable{
 		this.defaultQuality = defaultQuality;
 	}
 
+	public boolean isNeedIgnoreSize() {
+		return needIgnoreSize;
+	}
+
+	public void setNeedIgnoreSize(boolean needIgnoreSize) {
+		this.needIgnoreSize = needIgnoreSize;
+	}
 }

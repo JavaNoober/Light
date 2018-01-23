@@ -24,6 +24,7 @@ public class FileCompressProxy implements ICompressProxy {
 	private int quality;
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
+	private boolean needIgnoreSize;
 
 	public FileCompressProxy(){
 		lightConfig = Light.getInstance().getConfig();
@@ -45,15 +46,21 @@ public class FileCompressProxy implements ICompressProxy {
 	public Bitmap compress() {
 		int resultWidth;
 		int resultHeight;
-		if(width > 0 && height >0){
+		if(!needIgnoreSize && width > 0 && height >0){
 			resultWidth = width;
 			resultHeight = height;
 		}else {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
 			BitmapFactory.decodeFile(path, options);
-			resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
-			resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
+			if(needIgnoreSize){
+				resultWidth = options.outWidth;
+				resultHeight = options.outHeight;
+			}else {
+				resultWidth = Math.min(lightConfig.getMaxWidth(), options.outWidth);
+				resultHeight = Math.min(lightConfig.getMaxHeight(), options.outHeight);
+			}
+
 		}
 		Bitmap result = compressEngine.compress2Bitmap(path, resultWidth, resultHeight);
 		float scaleSize = MatrixUtil.getScale(resultWidth, resultHeight, result.getWidth(), result.getHeight());
@@ -68,24 +75,30 @@ public class FileCompressProxy implements ICompressProxy {
 		private int width;
 		private int height;
 		private int quality;
+		private boolean ignoreSize;
 
-		public FileCompressProxy.Builder path(String path) {
+		public Builder path(String path) {
 			this.path = path;
 			return this;
 		}
 
-		public FileCompressProxy.Builder width(int width) {
+		public Builder width(int width) {
 			this.width = width;
 			return this;
 		}
 
-		public FileCompressProxy.Builder height(int height) {
+		public Builder height(int height) {
 			this.height = height;
 			return this;
 		}
 
-		public FileCompressProxy.Builder quality(int quality) {
+		public Builder quality(int quality) {
 			this.quality = quality;
+			return this;
+		}
+
+		public Builder ignoreSize(boolean ignoreSize) {
+			this.ignoreSize = ignoreSize;
 			return this;
 		}
 
@@ -98,6 +111,7 @@ public class FileCompressProxy implements ICompressProxy {
 			proxy.height = height;
 			proxy.path = path;
 			proxy.quality = quality;
+			proxy.needIgnoreSize = ignoreSize;
 			return proxy;
 		}
 	}

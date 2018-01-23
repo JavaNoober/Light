@@ -7,10 +7,10 @@ import android.provider.MediaStore;
 import com.light.body.Light;
 
 /**
- * Created by xiaoqi on 2017/11/24.
+ * Created by xiaoqi on 2017/11/24
  */
 
-public class UriPraser {
+public class UriParser {
 
 	/**
 	 * http scheme for URIs.

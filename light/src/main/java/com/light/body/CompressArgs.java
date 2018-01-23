@@ -2,7 +2,7 @@ package com.light.body;
 
 
 /**
- * Created by xiaoqi on 2018/1/10.
+ * Created by xiaoqi on 2018/1/10
  */
 
 public class CompressArgs {
@@ -10,7 +10,7 @@ public class CompressArgs {
 	private int width;
 	private int height;
 	private int quality;
-
+	private boolean ignoreSize;
 	private CompressArgs(){
 
 	}
@@ -27,10 +27,15 @@ public class CompressArgs {
 		return quality;
 	}
 
+	public boolean isIgnoreSize() {
+		return ignoreSize;
+	}
+
 	public static class Builder {
 		private int width;
 		private int height;
 		private int quality;
+		private boolean ignoreSize = Light.getInstance().getConfig().isNeedIgnoreSize();
 
 		public Builder width(int width) {
 			this.width = width;
@@ -47,17 +52,17 @@ public class CompressArgs {
 			return this;
 		}
 
+		public Builder ignoreSize(boolean ignoreSize) {
+			this.ignoreSize = ignoreSize;
+			return this;
+		}
+
 		public CompressArgs build(){
 			CompressArgs args = new CompressArgs();
-
-//			if(count == 0){
-//				throw new IllegalArgumentException("You must choose a type of image to be compressed.");
-//			}else if(count > 1){
-//				throw new IllegalArgumentException("Only one type of image to be compressed can be selected");
-//			}
 			args.width = width;
 			args.height = height;
-			args.quality= quality;
+			args.quality = quality;
+			args.ignoreSize = ignoreSize;
 			return args;
 		}
 	}

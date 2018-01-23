@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import com.light.body.Light;
 
 /**
- * Created by xiaoqi on 2017/11/22.
+ * Created by xiaoqi on 2017/11/22
  */
 
 public class MemoryComputeUtil {

@@ -1,14 +1,10 @@
 package com.light.core.Utils;
 
 import android.graphics.BitmapFactory;
-import android.widget.Toast;
-
-import com.light.body.Light;
 
 /**
- * Created by xiaoqi on 2017/11/22.
+ * Created by xiaoqi on 2017/11/22
  */
-
 public class SimpleSizeCompute {
 
 	public static int computeSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
@@ -24,10 +20,7 @@ public class SimpleSizeCompute {
 		}
 		if(Math.max(options.outWidth, options.outHeight) / roundedSize < minSideLength){
 			roundedSize >>= 1;
-		}else {
-			Toast.makeText(Light.getInstance().getContext(), "SimpleSize正好", Toast.LENGTH_LONG).show();
 		}
-
 		return roundedSize;
 	}
 

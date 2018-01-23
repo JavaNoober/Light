@@ -3,7 +3,7 @@ package com.light.core.Utils.http;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.light.core.Utils.UriPraser;
+import com.light.core.Utils.UriParser;
 import com.light.core.listener.OnCompressFinishListener;
 
 import java.io.ByteArrayOutputStream;
@@ -12,18 +12,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 /**
  * Created by xiaoqi on 2017/12/20.
@@ -46,7 +34,7 @@ public class HttpHelper {
     }
 
     public static void downloadImage(Uri uri, OnCompressFinishListener callback) {
-        if (!UriPraser.isNetworkUri(uri))
+        if (!UriParser.isNetworkUri(uri))
             return;
 
         HttpURLConnection connection = obtainHttpURLConnection(uri, MAX_REDIRECTS);

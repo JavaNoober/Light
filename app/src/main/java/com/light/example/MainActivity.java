@@ -13,11 +13,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.light.body.CompressArgs;
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.Utils.MemoryComputeUtil;
-import com.light.core.Utils.UriPraser;
+import com.light.core.Utils.UriParser;
 
 import java.util.Locale;
 
@@ -33,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		ivCompress = findViewById(R.id.image_compress);
 		tvInfo = findViewById(R.id.tv_info);
-
+		LightConfig config = new LightConfig();
+		config.setNeedIgnoreSize(true);
+		Light.getInstance().setConfig(config);
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 			ivCompress.setImageBitmap(compressBitmap);
 
 			//系统获取图片的方法
-			String path = UriPraser.getPathFromContentUri(imageUri);
+			String path = UriParser.getPathFromContentUri(imageUri);
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
 			BitmapFactory.decodeFile(path, options);
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 			bitmap2.recycle();
 		}else if(requestCode == 2 && data != null){
 			Uri imageUri = data.getData();
-			String path = UriPraser.getPathFromContentUri(imageUri);
+			String path = UriParser.getPathFromContentUri(imageUri);
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
 			BitmapFactory.decodeFile(path, options);

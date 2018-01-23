@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 
 import com.light.body.Light;
-import com.light.core.Utils.UriPraser;
+import com.light.core.Utils.UriParser;
 import com.light.core.Utils.http.HttpHelper;
 import com.light.core.listener.ICompressProxy;
 import com.light.core.listener.OnCompressFinishListener;
@@ -27,16 +27,17 @@ public class UriCompressProxy implements ICompressProxy {
 	private int quality;
 	private ICompressProxy compressProxy = null;
 	private OnCompressFinishListener compressFinishListener = null;
+	private boolean needIgnoreSize;
 
 	@Override
 	public boolean compress(String outPath) {
-		if(UriPraser.isLocalFileUri(uri)){
-			String filePath = UriPraser.getPathFromFileUri(uri);
+		if(UriParser.isLocalFileUri(uri)){
+			String filePath = UriParser.getPathFromFileUri(uri);
 			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
-		}else if(UriPraser.isLocalContentUri(uri)){
-			String filePath = UriPraser.getPathFromContentUri(uri);
+		}else if(UriParser.isLocalContentUri(uri)){
+			String filePath = UriParser.getPathFromContentUri(uri);
 			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
-		}else if(UriPraser.isLocalAnroidResourceUri(uri)){
+		}else if(UriParser.isLocalAnroidResourceUri(uri)){
 			try {
 				InputStream input = Light.getInstance().getContext().getContentResolver().openInputStream(uri);
 				Bitmap bitmap = BitmapFactory.decodeStream(input);
@@ -44,7 +45,7 @@ public class UriCompressProxy implements ICompressProxy {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-		}else if(UriPraser.isNetworkUri(uri)){
+		}else if(UriParser.isNetworkUri(uri)){
 			throw new RuntimeException("network uri is not support yet");
 //			if(Looper.getMainLooper() == Looper.myLooper()){
 //				throw new RuntimeException("network uri can't compressed on UI Thread");
@@ -61,7 +62,7 @@ public class UriCompressProxy implements ICompressProxy {
 
 	//TODO 从网络下载图片
 	private void compress(String outPath, OnCompressFinishListener compressFinishListener) {
-		if(UriPraser.isNetworkUri(uri)) {
+		if(UriParser.isNetworkUri(uri)) {
 			if (Looper.getMainLooper() == Looper.myLooper()) {
 				throw new RuntimeException("network uri can't compressed on UI Thread");
 			}
@@ -75,21 +76,24 @@ public class UriCompressProxy implements ICompressProxy {
 	@Override
 	public Bitmap compress() {
 
-		if(UriPraser.isLocalFileUri(uri)){
-			String filePath = UriPraser.getPathFromFileUri(uri);
-			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
-		}else if(UriPraser.isLocalContentUri(uri)){
-			String filePath = UriPraser.getPathFromContentUri(uri);
-			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
-		}else if(UriPraser.isLocalAnroidResourceUri(uri)){
+		if(UriParser.isLocalFileUri(uri)){
+			String filePath = UriParser.getPathFromFileUri(uri);
+			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).ignoreSize(needIgnoreSize)
+					.path(filePath).build();
+		}else if(UriParser.isLocalContentUri(uri)){
+			String filePath = UriParser.getPathFromContentUri(uri);
+			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).ignoreSize(needIgnoreSize)
+					.path(filePath).build();
+		}else if(UriParser.isLocalAnroidResourceUri(uri)){
 			try {
 				InputStream input = Light.getInstance().getContext().getContentResolver().openInputStream(uri);
 				Bitmap bitmap = BitmapFactory.decodeStream(input);
-				compressProxy = new BitmapCompressProxy.Builder().width(width).height(height).bitmap(bitmap).build();
+				compressProxy = new BitmapCompressProxy.Builder().width(width).height(height).bitmap(bitmap)
+						.ignoreSize(needIgnoreSize).build();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-		}else if(UriPraser.isNetworkUri(uri)){
+		}else if(UriParser.isNetworkUri(uri)){
 			if(Looper.getMainLooper() == Looper.myLooper()){
 				throw new RuntimeException("network uri can't compressed on UI Thread");
 			}
@@ -106,6 +110,7 @@ public class UriCompressProxy implements ICompressProxy {
 		private int width;
 		private int height;
 		private int quality;
+		private boolean ignoreSize;
 		private OnCompressFinishListener compressFinishListener;
 
 		public Builder uri(Uri uri) {
@@ -128,6 +133,11 @@ public class UriCompressProxy implements ICompressProxy {
 			return this;
 		}
 
+		public Builder ignoreSize(boolean ignoreSize) {
+			this.ignoreSize = ignoreSize;
+			return this;
+		}
+
 		public Builder compressListener(OnCompressFinishListener compressFinishListener) {
 			this.compressFinishListener = compressFinishListener;
 			return this;
@@ -142,6 +152,7 @@ public class UriCompressProxy implements ICompressProxy {
 			proxy.height = height;
 			proxy.uri = uri;
 			proxy.quality = quality;
+			proxy.needIgnoreSize = ignoreSize;
 			proxy.compressFinishListener = compressFinishListener;
 			return proxy;
 		}

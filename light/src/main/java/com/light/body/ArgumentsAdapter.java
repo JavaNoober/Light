@@ -7,11 +7,11 @@ import com.light.proxy.CompressFactory;
  * Created by xiaoqi on 2018/1/10
  */
 
-public class ArguementsAdapter {
+public class ArgumentsAdapter {
 
 	CompressArgs compressArgs;
 
-	public ArguementsAdapter(CompressArgs compressArgs){
+	public ArgumentsAdapter(CompressArgs compressArgs){
 		this.compressArgs = compressArgs;
 	}
 
