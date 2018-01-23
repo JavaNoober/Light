@@ -1,6 +1,6 @@
 # Light
 a lightweight image compress framework for Android based on libJpeg.
-一个基于libJpeg的压缩图片框架。
+一个基于libJpeg的压缩图片框架。(逐步更新中...)
 
 support types:
     File,String,Uri,Bytes,Bitmap,DrawableResourceID,Drawable
@@ -19,6 +19,13 @@ support types:
  
     引入
     compile 'com.noober.light:core:0.0.1'
+    
+    android {
+        ...
+        ndk {
+            abiFilters 'armeabi-v7a', 'armeabi', 'x86'
+        }
+    }
     
  #### 设置压缩参数:
  CompressArgs这个类用于设置每次所要压缩到的指定的宽高以及压缩质量。使用如下:

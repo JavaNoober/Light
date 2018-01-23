@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 	Uri imageUri;
 //	String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/pic.jpg";
 	final static String info = "原图片:\n高度：%d，宽度：%d，占用内存：%dKB\n显示的图片(压缩后)：\n高度：%d, 宽度：%d，占用内存：%dKB";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
