@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.light.body.Light;
 import com.light.core.Utils.UriParser;
-import com.light.core.Utils.http.HttpHelper;
+import com.light.core.Utils.http.HttpDownLoader;
 import com.light.core.listener.ICompressProxy;
 import com.light.core.listener.OnCompressFinishListener;
 
@@ -46,28 +46,31 @@ public class UriCompressProxy implements ICompressProxy {
 				e.printStackTrace();
 			}
 		}else if(UriParser.isNetworkUri(uri)){
-			throw new RuntimeException("network uri is not support yet");
-//			if(Looper.getMainLooper() == Looper.myLooper()){
-//				throw new RuntimeException("network uri can't compressed on UI Thread");
-//			}
-//			if(compressFinishListener != null){
-//				HttpHelper.downloadImage(uri, compressFinishListener);
-//			}
+			if(Looper.getMainLooper() == Looper.myLooper()){
+				throw new RuntimeException("network uri can't compressed on UI Thread");
+			}
+			if(compressFinishListener != null){
+				HttpDownLoader.downloadImage(uri, compressFinishListener);
+			}
+
 		}else {
 			return false;
 		}
-		return compressProxy.compress(outPath);
+		if(compressProxy != null){
+			return compressProxy.compress(outPath);
+		}else {
+			return true;
+		}
+
 	}
 
-
-	//TODO 从网络下载图片
-	private void compress(String outPath, OnCompressFinishListener compressFinishListener) {
+	public void compressFromHttp(OnCompressFinishListener compressFinishListener) {
 		if(UriParser.isNetworkUri(uri)) {
 			if (Looper.getMainLooper() == Looper.myLooper()) {
 				throw new RuntimeException("network uri can't compressed on UI Thread");
 			}
-			if (compressFinishListener != null) {
-				HttpHelper.downloadImage(uri, compressFinishListener);
+			if(compressFinishListener != null){
+				HttpDownLoader.downloadImage(uri, compressFinishListener);
 			}
 		}
 	}
@@ -110,7 +113,7 @@ public class UriCompressProxy implements ICompressProxy {
 		private int width;
 		private int height;
 		private int quality;
-		private boolean ignoreSize;
+		private boolean ignoreSize = Light.getInstance().getConfig().isNeedIgnoreSize();
 		private OnCompressFinishListener compressFinishListener;
 
 		public Builder uri(Uri uri) {

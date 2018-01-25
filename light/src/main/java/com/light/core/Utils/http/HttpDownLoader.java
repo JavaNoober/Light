@@ -14,9 +14,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by xiaoqi on 2017/12/20.
+ * Created by xiaoqi on 2017/12/20
  */
-public class HttpHelper {
+public class HttpDownLoader {
 
     private static final int MAX_REDIRECTS = 5;
 

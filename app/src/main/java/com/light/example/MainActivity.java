@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -17,6 +18,8 @@ import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.Utils.MemoryComputeUtil;
 import com.light.core.Utils.UriParser;
+import com.light.core.Utils.http.HttpDownLoader;
+import com.light.core.listener.OnCompressFinishListener;
 
 import java.util.Locale;
 
@@ -24,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 	ImageView ivCompress;
 	TextView tvInfo;
 	Uri imageUri;
-//	String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/pic.jpg";
+	String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/pic22.jpg";
 	final static String info = "原图片:\n高度：%d，宽度：%d，占用内存：%dKB\n显示的图片(压缩后)：\n高度：%d, 宽度：%d，占用内存：%dKB";
 
 	@Override
@@ -36,6 +39,27 @@ public class MainActivity extends AppCompatActivity {
 		LightConfig config = new LightConfig();
 		config.setNeedIgnoreSize(true);
 		Light.getInstance().setConfig(config);
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Uri uri = Uri.parse("http://pic4.nipic.com/20091217/3885730_124701000519_2.jpg");
+				Light.getInstance().compress(uri, path);
+//				HttpDownLoader.downloadImage(uri, new OnCompressFinishListener() {
+//
+//					@Override
+//					public void onFinish(final byte[] bytes) {
+//						runOnUiThread(new Runnable() {
+//							@Override
+//							public void run() {
+//								Bitmap compressBitmap = Light.getInstance().compress(bytes);
+//								ivCompress.setImageBitmap(compressBitmap);
+//							}
+//						});
+//					}
+//				});
+			}
+		}).start();
 	}
 
 	@Override

@@ -10,12 +10,13 @@ import android.widget.ImageView;
 
 import com.light.core.Utils.ContextUtil;
 import com.light.core.Utils.DisplayUtil;
+import com.light.core.listener.OnCompressFinishListener;
 import com.light.proxy.CompressFactory;
 
 import java.io.File;
 
 /**
- * Created by xiaoqi on 2017/11/21.
+ * Created by xiaoqi on 2017/11/21
  */
 
 public class Light {
@@ -130,6 +131,9 @@ public class Light {
 		if(outPath == null){
 			throw new NullPointerException("OutPath is Null!");
 		}
+		if(imageSource == null){
+			throw new NullPointerException("imageSource is Null!");
+		}
 		if(imageSource instanceof String){
 			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, imageSource).compress(outPath);
 		}else if(imageSource instanceof Uri){
@@ -221,6 +225,24 @@ public class Light {
 					"drawable resourceId");
 		}
 	}
+
+	//from internet
+	public void compress(String url, OnCompressFinishListener listener){
+		compress(url, null, listener);
+	}
+
+	public void compress(String url, CompressArgs compressArgs, OnCompressFinishListener listener){
+		new ArgumentsAdapter(compressArgs).getCompressProxy(url).compressFromHttp(listener);
+	}
+
+	public void compress(Uri uri, OnCompressFinishListener listener){
+		compress(uri, null, listener);
+	}
+
+	public void compress(Uri uri, CompressArgs compressArgs, OnCompressFinishListener listener){
+		new ArgumentsAdapter(compressArgs).getCompressProxy(uri).compressFromHttp(listener);
+	}
+
 
 	public static void setImage(final ImageView imageView, Object imageSource){
 		int[] size = DisplayUtil.getViewSize(imageView);

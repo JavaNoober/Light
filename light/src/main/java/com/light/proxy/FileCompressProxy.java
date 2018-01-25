@@ -2,13 +2,16 @@ package com.light.proxy;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Looper;
 
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.LightCompressEngine;
 import com.light.core.Utils.MatrixUtil;
+import com.light.core.Utils.http.HttpDownLoader;
 import com.light.core.listener.ICompressEngine;
 import com.light.core.listener.ICompressProxy;
+import com.light.core.listener.OnCompressFinishListener;
 
 import java.io.File;
 
@@ -68,6 +71,15 @@ public class FileCompressProxy implements ICompressProxy {
 			return new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result).build();
 		}
 		return result;
+	}
+
+	public void compressFromHttp(OnCompressFinishListener compressFinishListener) {
+		if (Looper.getMainLooper() == Looper.myLooper()) {
+			throw new RuntimeException("network uri can't compressed on UI Thread");
+		}
+		if (compressFinishListener != null) {
+			HttpDownLoader.downloadImage(path, compressFinishListener);
+		}
 	}
 
 	public static class Builder {

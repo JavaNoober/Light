@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by xiaoqi on 2017/11/25.
+ * Created by xiaoqi on 2017/11/25
  */
 
 public class AsyncCompressExecutor {
@@ -31,7 +31,9 @@ public class AsyncCompressExecutor {
 	private static class CompressHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
+			if(msg.what == COMPRESS){
 
+			}
 		}
 	}
 
