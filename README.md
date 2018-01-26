@@ -1,22 +1,25 @@
 # Light
 a lightweight image compress framework for Android based on libJpeg.
 一个基于libJpeg的压缩图片框架, 支持配合rxjava使用。(逐步更新中...)
+ ### demo效果
+ 
+ 先展示一下压缩前后的效果对比，以及文件大小和占用内存的大小
+ demo比较简单，运行的时候请打开sd卡权限和相册拍照权限。
+ 
+ ![][ https://raw.githubusercontent.com/JavaNoober/Light/master/demo.jpg]
 
-### 基本功能:
+ ### 基本功能:
 支持的压缩类型:
     File,String,Uri,Bytes,Bitmap,DrawableResourceID,Drawable
 
- * 1:设置文件最大值 //todo
- * 2:图片的旋转、缩放、平移操作
- * 3:异步并发压缩 //todo
- * 4:同步压缩
- * 5:可以配合RxJava2使用
- 
+ * 1:图片的旋转、缩放、平移操作
+ * 2:异步和同步压缩处理
+ * 3:同步压缩
+ * 4:可以配合RxJava2使用
  
  ### 版本记录: 
        
        1.0.0 完成大致功能
-       //未发布
        1.1.0 修复从uri获取路径错误的bug;
              增加ignoreSize的设置，以便用于压缩图片保持原尺寸;
              支持配合rxjava2使用;
@@ -32,7 +35,7 @@ a lightweight image compress framework for Android based on libJpeg.
     }
     
     //引入
-    implementation 'com.noober.light:core:0.0.1'
+    implementation 'com.noober.light:core:1.1.0'
     
     //如果要配合rxjava2,加入rxjava2的依赖
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
@@ -144,17 +147,16 @@ a lightweight image compress framework for Android based on libJpeg.
     Flowable.just(image).compose(RxLight.compress(outPath)).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
  
  #### 其他
- 
- * 1:MemoryComputeUtil工具类，获取bitmap占用内存的大小，返回值单位是kb：
+ * 1:MemoryComputeUtil工具类，获取bitmap占用内存的大小，返回值单位是kb。
  
 
-    MemoryComputeUtil.getMemorySize(compressBitmap)
+     MemoryComputeUtil.getMemorySize(compressBitmap)
     
  * 2:关于so文件的编译，可以移步[https://github.com/JavaNoober/LibJpegCompress](https://github.com/JavaNoober/LibJpegCompress)。
  如何去编译，我在很久之前的写过一个博客介绍过:[http://blog.csdn.net/qq_25412055/article/details/53878655](http://blog.csdn.net/qq_25412055/article/details/53878655)
  
  * 3:MatrixUtil工具类
- 可以很方便的对Bitmap进行放大缩小、旋转、缩放、平移等处理，使用也很方便，支持Matrix的大部分方法：
+ 可以很方便的对Bitmap进行放大缩小、旋转、缩放、平移等处理，使用也很方便，支持Matrix的大部分方法。
  
 
     Bitmap result = new MatrixUtil.Build().scale(scaleSize, scaleSize).rotate(90f).bitmap(bitmap).build();
