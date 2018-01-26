@@ -4,15 +4,15 @@
 [![JCenter](https://img.shields.io/badge/JCenter-Light-green.svg?style=flat)](https://bintray.com/noober/maven/Light)
 
 a lightweight image compress framework for Android based on libJpeg.
-一个基于libJpeg的压缩图片框架, 支持配合rxjava使用。(逐步更新中...)
- ### demo效果
+一个基于libJpeg的压缩图片框架, 支持配合rxjava使用。
+### demo效果
  
  先展示一下压缩前后的效果对比，以及文件大小和占用内存的大小
  demo比较简单，运行的时候请打开sd卡权限和相册拍照权限。
  
  ![](https://raw.githubusercontent.com/JavaNoober/Light/master/demo.jpg)
 
- ### 基本功能:
+### 基本功能:
 支持的压缩类型:
     File,String,Uri,Bytes,Bitmap,DrawableResourceID,Drawable
 
@@ -29,22 +29,20 @@ a lightweight image compress framework for Android based on libJpeg.
              支持配合rxjava2使用;
              
  ### 使用方法: 
- 
- GitHub下载地址：[https://github.com/JavaNoober/Light](https://github.com/JavaNoober/Light)
-    
-    android {
-        ...
-        ndk {
-            abiFilters 'armeabi-v7a', 'armeabi', 'x86'
-        }
-    }
-    
-    //引入
-    implementation 'com.noober.light:core:1.1.0'
-    
-    //如果要配合rxjava2,加入rxjava2的依赖
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+   
+	    android {
+	        ...
+	        ndk {
+	            abiFilters 'armeabi-v7a', 'armeabi', 'x86'
+	        }
+	    }
+	    
+	    //引入
+	    implementation 'com.noober.light:core:1.1.0'
+	    
+	    //如果要配合rxjava2,加入rxjava2的依赖
+	    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+	    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
    
     
  #### 设置压缩参数:
@@ -71,7 +69,7 @@ a lightweight image compress framework for Android based on libJpeg.
     默认压缩质量是85；
     ignoreSize 为false。
     
- ##### 设置全局的压缩参数，以便不需要每次都去设置：    
+##### 设置全局的压缩参数，以便不需要每次都去设置：    
  建议在Application的onCreate中进行初始化，使用如下：
  
     LightConfig lightConfig = new LightConfig();
@@ -83,7 +81,7 @@ a lightweight image compress framework for Android based on libJpeg.
     Light.getInstance().setConfig(lightConfig);
     
     
- #### 压缩图片，获取Bitmap：images -> Bitmap
+#### 压缩图片，获取Bitmap：images -> Bitmap
  
  支持**File,String,Uri,Bytes,Bitmap,DrawableResourceID,Drawable**这5种类型压缩为Bitmap。
     
@@ -94,7 +92,7 @@ a lightweight image compress framework for Android based on libJpeg.
     Bitmap bitmap = Light.getInstance().compress(path, args);
     .....
     
- #### 压缩图片并且保存到本地：images -> boolean    
+#### 压缩图片并且保存到本地：images -> boolean    
  支持**File,String,Uri,Bytes,Bitmap**这5种类型保存为文件。
  想对于压缩成Bitmap的方法只是多了一个输出路径。
  
@@ -104,15 +102,15 @@ a lightweight image compress framework for Android based on libJpeg.
     Light.getInstance().compress(img, outPath);
     //支持类型Bitmap, Bytes, String, Resource, Uri, Drawable
     
- #### 配合RxJava2使用
+#### 配合RxJava2使用
  关于配合RxJava2使用的类都在RxLight这个类中。
  通过与rxJava的配合，一行代码就能实现从网络下载->压缩->显示，这个过程，非常的方便。
  
  使用方法如下：
- ##### 从网络获取资源
+##### 从网络获取资源
  
  RxLight会自动对图片进行下载 -> 压缩 -> 显示或保存到本地
- ###### 从网络获取资源 -> Bitmap:
+###### 从网络获取资源 -> Bitmap:
     
     //uri类型的网络资源
     Flowable.just(uri).compose(RxLight.compressForUriHttp()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
@@ -129,7 +127,7 @@ a lightweight image compress framework for Android based on libJpeg.
     ....
     Flowable.just(uri).compose(RxLight.compressForUriHttp(args)).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
     
- ###### 从网络获取资源 -> boolean(保存到本地):
+###### 从网络获取资源 -> boolean(保存到本地):
  与上述方法类似，只需要compressForUri() 和 compressForString()传入要保存到的路径即可。同样支持uri和string的网络地址类型。
            
     String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/pic.jpg";
@@ -139,23 +137,23 @@ a lightweight image compress framework for Android based on libJpeg.
     ....
     Flowable.just(uri).compose(RxLight.compressForUriHttp(path, args)).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
         
- ##### 通过本地资源异步压缩
+##### 通过本地资源异步压缩
  同样都支持 File,String,Uri,Bytes,Bitmap,DrawableResourceID,Drawable这几种类型
- ###### 图片资源 -> Bitmap
+###### 图片资源 -> Bitmap
  通过RxLight.compress()方法即可:
  
     Flowable.just(image).compose(RxLight.compress()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
  
- ###### 图片资源 -> Boolean(保存到本地):
+###### 图片资源 -> Boolean(保存到本地):
  通过RxLight.compress(outPath)方法即可:
  
     Flowable.just(image).compose(RxLight.compress(outPath)).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
  
- #### 其他
+#### 其他
  * 1:MemoryComputeUtil工具类，获取bitmap占用内存的大小，返回值单位是kb。
  
 
-     MemoryComputeUtil.getMemorySize(compressBitmap)
+	     MemoryComputeUtil.getMemorySize(compressBitmap)
     
  * 2:关于so文件的编译，可以移步[https://github.com/JavaNoober/LibJpegCompress](https://github.com/JavaNoober/LibJpegCompress)。
  如何去编译，我在很久之前的写过一个博客介绍过:[http://blog.csdn.net/qq_25412055/article/details/53878655](http://blog.csdn.net/qq_25412055/article/details/53878655)
@@ -164,8 +162,10 @@ a lightweight image compress framework for Android based on libJpeg.
  可以很方便的对Bitmap进行放大缩小、旋转、缩放、平移等处理，使用也很方便，支持Matrix的大部分方法。
  
 
-    Bitmap result = new MatrixUtil.Build().scale(scaleSize, scaleSize).rotate(90f).bitmap(bitmap).build();
+	    Bitmap result = new MatrixUtil.Build().scale(scaleSize, scaleSize).rotate(90f).bitmap(bitmap).build();
     
  ### 总结
  
  版本还在逐步更新中，欢迎各位大佬star，以及提出建议。
+
+ GitHub demo下载地址：[https://github.com/JavaNoober/Light](https://github.com/JavaNoober/Light)
