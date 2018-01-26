@@ -2,6 +2,7 @@
 
 [![license](https://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat)](https://github.com/JavaNoober/Light)
 [![JCenter](https://img.shields.io/badge/JCenter-Light-green.svg?style=flat)](https://bintray.com/noober/maven/Light)
+
 a lightweight image compress framework for Android based on libJpeg.
 一个基于libJpeg的压缩图片框架, 支持配合rxjava使用。(逐步更新中...)
  ### demo效果
