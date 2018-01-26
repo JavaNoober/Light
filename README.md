@@ -1,4 +1,7 @@
 # Light
+
+[![license](https://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat)](https://github.com/JavaNoober/Light)
+[![JCenter](https://img.shields.io/badge/JCenter-Light-green.svg?style=flat)](https://bintray.com/noober/maven/Light)
 a lightweight image compress framework for Android based on libJpeg.
 一个基于libJpeg的压缩图片框架, 支持配合rxjava使用。(逐步更新中...)
  ### demo效果
@@ -6,7 +9,7 @@ a lightweight image compress framework for Android based on libJpeg.
  先展示一下压缩前后的效果对比，以及文件大小和占用内存的大小
  demo比较简单，运行的时候请打开sd卡权限和相册拍照权限。
  
- ![][ https://raw.githubusercontent.com/JavaNoober/Light/master/demo.jpg]
+ ![](https://raw.githubusercontent.com/JavaNoober/Light/master/demo.jpg)
 
  ### 基本功能:
 支持的压缩类型:
@@ -25,7 +28,8 @@ a lightweight image compress framework for Android based on libJpeg.
              支持配合rxjava2使用;
              
  ### 使用方法: 
-    
+ 
+ GitHub下载地址：[https://github.com/JavaNoober/Light](https://github.com/JavaNoober/Light)
     
     android {
         ...
@@ -160,3 +164,7 @@ a lightweight image compress framework for Android based on libJpeg.
  
 
     Bitmap result = new MatrixUtil.Build().scale(scaleSize, scaleSize).rotate(90f).bitmap(bitmap).build();
+    
+ ### 总结
+ 
+ 版本还在逐步更新中，欢迎各位大佬star，以及提出建议。
