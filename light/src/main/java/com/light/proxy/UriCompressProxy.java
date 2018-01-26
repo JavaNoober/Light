@@ -46,22 +46,12 @@ public class UriCompressProxy implements ICompressProxy {
 				e.printStackTrace();
 			}
 		}else if(UriParser.isNetworkUri(uri)){
-			if(Looper.getMainLooper() == Looper.myLooper()){
-				throw new RuntimeException("network uri can't compressed on UI Thread");
-			}
-			if(compressFinishListener != null){
-				HttpDownLoader.downloadImage(uri, compressFinishListener);
-			}
+			throw new RuntimeException("please use method of 'Light.getInstance().compressFromHttp()'");
 
 		}else {
 			return false;
 		}
-		if(compressProxy != null){
-			return compressProxy.compress(outPath);
-		}else {
-			return true;
-		}
-
+		return compressProxy.compress(outPath);
 	}
 
 	public void compressFromHttp(OnCompressFinishListener compressFinishListener) {

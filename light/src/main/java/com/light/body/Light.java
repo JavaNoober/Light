@@ -10,10 +10,21 @@ import android.widget.ImageView;
 
 import com.light.core.Utils.ContextUtil;
 import com.light.core.Utils.DisplayUtil;
+import com.light.core.Utils.http.HttpDownLoader;
 import com.light.core.listener.OnCompressFinishListener;
 import com.light.proxy.CompressFactory;
 
 import java.io.File;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by xiaoqi on 2017/11/21
@@ -127,7 +138,7 @@ public class Light {
 		return compressImage(drawable, compressArgs, outPath);
 	}
 
-	private boolean compressImage(Object imageSource, CompressArgs compressArgs, String outPath){
+	boolean compressImage(Object imageSource, CompressArgs compressArgs, String outPath){
 		if(outPath == null){
 			throw new NullPointerException("OutPath is Null!");
 		}
@@ -207,7 +218,7 @@ public class Light {
 		return compressImage(drawable, null);
 	}
 
-	private Bitmap compressImage(Object imageSource, CompressArgs compressArgs){
+	Bitmap compressImage(Object imageSource, CompressArgs compressArgs){
 		if(imageSource instanceof File){
 			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, ((File) imageSource).getAbsolutePath()).compress();
 		}else if(imageSource instanceof String){
@@ -226,23 +237,49 @@ public class Light {
 		}
 	}
 
-	//from internet
-	public void compress(String url, OnCompressFinishListener listener){
-		compress(url, null, listener);
+	/**
+	 * get image from internet
+	 *
+	 * run on sub thread
+	 *
+	 * @param url http
+	 * @param listener
+	 */
+	public void compressFromHttp(String url, OnCompressFinishListener listener){
+		compressFromHttp(url, null, listener);
 	}
 
-	public void compress(String url, CompressArgs compressArgs, OnCompressFinishListener listener){
+	public void compressFromHttp(String url, CompressArgs compressArgs, OnCompressFinishListener listener){
 		new ArgumentsAdapter(compressArgs).getCompressProxy(url).compressFromHttp(listener);
 	}
 
-	public void compress(Uri uri, OnCompressFinishListener listener){
-		compress(uri, null, listener);
+	/**
+	 * get image from internet
+	 *
+	 * run on sub thread
+	 *
+	 * @param uri http
+	 * @param listener
+	 */
+	public void compressFromHttp(Uri uri, OnCompressFinishListener listener){
+		compressFromHttp(uri, null, listener);
 	}
 
-	public void compress(Uri uri, CompressArgs compressArgs, OnCompressFinishListener listener){
+	public void compressFromHttp(Uri uri, CompressArgs compressArgs, OnCompressFinishListener listener){
 		new ArgumentsAdapter(compressArgs).getCompressProxy(uri).compressFromHttp(listener);
 	}
 
+
+	public ObservableOnSubscribe createCompressObservable(final Uri uri, final CompressArgs compressArgs){
+		return new ObservableOnSubscribe<Bitmap>() {
+			@Override
+			public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
+				byte[] bytes = HttpDownLoader.downloadImage(uri);
+				e.onNext(compress(bytes, compressArgs));
+				e.onComplete();
+			}
+		};
+	}
 
 	public static void setImage(final ImageView imageView, Object imageSource){
 		int[] size = DisplayUtil.getViewSize(imageView);

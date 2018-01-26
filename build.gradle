@@ -30,7 +30,7 @@ ext {
     userOrg = 'noober'
     groupId = 'com.noober.light'
     uploadName = 'Light'
-    publishVersion = '0.0.1'
+    publishVersion = '1.1.0'
     desc = "a light weight image compress framework for Android based on libjpeg"
     website = 'https://github.com/JavaNoober/Light'
 //    gradlew clean build bintrayUpload -PbintrayUser=xiaoqiandroid -PbintrayKey=xxxxxxxxxxxxxxxx -PdryRun=false

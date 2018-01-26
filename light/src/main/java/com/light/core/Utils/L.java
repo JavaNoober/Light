@@ -2,13 +2,15 @@ package com.light.core.Utils;
 
 import android.util.Log;
 
+import com.light.body.LightConfig;
+
 import java.util.ArrayList;
 
 public class L {
     private static final String TAG = "Light";
 	private static final String LINE="-------------------------------";
 
-	private static final boolean isDebug = true;
+	private static final boolean isDebug = LightConfig.isDebug;
     public static void e(String tag, String msg){
         if(isDebug){
             Log.e(tag, msg);

@@ -24,6 +24,8 @@ public class LightConfig implements Serializable{
 
 	private boolean needIgnoreSize = false;
 
+	public static boolean isDebug = true;
+
 	public LightConfig(){
 		maxWidth = DisplayUtil.getScreenWidth(Light.getInstance().getContext());
 		maxHeight = DisplayUtil.getScreenHeight(Light.getInstance().getContext());

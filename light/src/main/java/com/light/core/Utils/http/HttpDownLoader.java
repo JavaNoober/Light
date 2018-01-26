@@ -39,14 +39,13 @@ public class HttpDownLoader {
 
         HttpURLConnection connection = obtainHttpURLConnection(uri, MAX_REDIRECTS);
         InputStream is = null;
-
         if (connection == null)
             return;
         try {
             is = connection.getInputStream();
-            if (callback != null)
-
+            if (callback != null){
                 callback.onFinish(transformToByteArray(is));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -56,7 +55,7 @@ public class HttpDownLoader {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    //ignore...
+                    e.printStackTrace();
                 }
             }
             if (connection != null) {
@@ -65,9 +64,51 @@ public class HttpDownLoader {
         }
     }
 
-    private static HttpURLConnection obtainHttpURLConnection(Uri uri, int maxRedirects) {
-        if (uri == null)
+    public static byte[] downloadImage(String url) {
+        if (TextUtils.isEmpty(url)){
             return null;
+        }
+        Uri uri = Uri.parse(url);
+        return downloadImage(uri);
+    }
+
+    public static byte[] downloadImage(Uri uri) {
+        if (!UriParser.isNetworkUri(uri)){
+            return null;
+        }
+
+        HttpURLConnection connection = obtainHttpURLConnection(uri, MAX_REDIRECTS);
+        InputStream is = null;
+
+        if (connection == null){
+            return null;
+        }
+        try {
+            is = connection.getInputStream();
+            return transformToByteArray(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+        return null;
+    }
+
+    private static HttpURLConnection obtainHttpURLConnection(Uri uri, int maxRedirects) {
+        if (uri == null){
+            return null;
+        }
         HttpURLConnection connection = null;
         try {
             URL url = new URL(uri.toString());
@@ -76,9 +117,9 @@ public class HttpDownLoader {
             connection.setReadTimeout(TIMEOUT);
             connection.connect();
             int responseCode = connection.getResponseCode();
-            if (responseCode >= HttpURLConnection.HTTP_OK &&
-                    responseCode < HttpURLConnection.HTTP_MULT_CHOICE)
+            if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE){
                 return connection;
+            }
 
             if (isHttpRedirect(responseCode)) {
                 String nextUriString = connection.getHeaderField("Location");
@@ -143,7 +184,7 @@ public class HttpDownLoader {
             try {
                 bos.close();
             } catch (IOException e) {
-                //ignore...
+                e.printStackTrace();
             }
         }
         return bos.toByteArray();
