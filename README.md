@@ -27,6 +27,7 @@ a lightweight image compress framework for Android based on libJpeg.
        1.1.0 修复从uri获取路径错误的bug;
              增加ignoreSize的设置，以便用于压缩图片保持原尺寸;
              支持配合rxjava2使用;
+       1.0.1 RxLight去除线程切换控制，让开发者自己去指定线程;
              
  ### 使用方法: 
    

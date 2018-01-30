@@ -3,7 +3,9 @@ package com.light.body;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Looper;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import com.light.core.listener.OnCompressFinishListener;
 import com.light.proxy.CompressFactory;
 
 import java.io.File;
+import java.io.IOException;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -219,6 +222,9 @@ public class Light {
 	}
 
 	Bitmap compressImage(Object imageSource, CompressArgs compressArgs){
+		if(imageSource == null){
+			throw new NullPointerException("imageSource is Null!");
+		}
 		if(imageSource instanceof File){
 			return new ArgumentsAdapter(compressArgs).getCompressProxy(CompressFactory.Compress.File, ((File) imageSource).getAbsolutePath()).compress();
 		}else if(imageSource instanceof String){
@@ -270,17 +276,6 @@ public class Light {
 	}
 
 
-	public ObservableOnSubscribe createCompressObservable(final Uri uri, final CompressArgs compressArgs){
-		return new ObservableOnSubscribe<Bitmap>() {
-			@Override
-			public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
-				byte[] bytes = HttpDownLoader.downloadImage(uri);
-				e.onNext(compress(bytes, compressArgs));
-				e.onComplete();
-			}
-		};
-	}
-
 	public static void setImage(final ImageView imageView, Object imageSource){
 		int[] size = DisplayUtil.getViewSize(imageView);
 		CompressArgs args = new CompressArgs.Builder()
@@ -295,5 +290,67 @@ public class Light {
 			throw new RuntimeException("Only the original thread that created a view hierarchy can touch its views.");
 		}
 		imageView.setImageBitmap(Light.getInstance().compressImage(imageSource, args));
+	}
+
+	/**
+	 * 读取图片的旋转的角度
+	 * @param imagePath 图片绝对路径
+	 * @return 图片的旋转角度
+	 */
+	public static int getBitmapDegree(String imagePath) {
+		int degree = 0;
+		try {
+			// 从指定路径下读取图片，并获取其EXIF信息
+			ExifInterface exifInterface = new ExifInterface(imagePath);
+			// 获取图片的旋转信息
+			int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+					ExifInterface.ORIENTATION_NORMAL);
+			switch (orientation) {
+				case ExifInterface.ORIENTATION_ROTATE_90:
+				case ExifInterface.ORIENTATION_TRANSPOSE:
+					degree = 90;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_180:
+				case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+					degree = 180;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_270:
+				case ExifInterface.ORIENTATION_TRANSVERSE:
+					degree = 270;
+					break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return degree;
+	}
+
+	/**
+	 * 将图片按照某个角度进行旋转
+	 * @param srcBitmap     需要旋转的图片
+	 * @param degree 旋转角度
+	 * @return 旋转后的图片
+	 */
+	public static Bitmap rotateBitmapByDegree(Bitmap srcBitmap, int degree) {
+		if (degree == 0) {
+			return srcBitmap;
+		}
+		Bitmap newBitmap = null;
+		// 根据旋转角度，生成旋转矩阵
+		Matrix matrix = new Matrix();
+		matrix.preRotate(degree);
+		try {
+			// 将原始图片按照旋转矩阵进行旋转，并得到新的图片
+			newBitmap = Bitmap.createBitmap(srcBitmap, 0, 0, srcBitmap.getWidth(), srcBitmap.getHeight(), matrix, true);
+		} catch (OutOfMemoryError e) {
+			e.printStackTrace();
+		}
+		if (newBitmap == null) {
+			newBitmap = srcBitmap;
+		}
+		if (srcBitmap != null) {
+			srcBitmap.recycle();
+		}
+		return newBitmap;
 	}
 }
