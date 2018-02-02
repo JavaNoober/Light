@@ -19,6 +19,9 @@ public class ArgumentsAdapter {
 		this.compressArgs = compressArgs;
 	}
 
+	public ArgumentsAdapter(){
+	}
+
 	public ICompressProxy getCompressProxy(CompressFactory.Compress compressCategory, Object imageSource){
 		return CompressFactory.createCompress(compressCategory, compressArgs, imageSource);
 	}

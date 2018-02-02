@@ -135,33 +135,4 @@ public class LightCompressEngine implements ICompressEngine{
 		}
 	}
 
-
-
-//	public void compress(List<String> pathList, String outputPath, int fileSize,
-//	                     final OnCompressFinishListener listener) {
-//		Observable.fromIterable(pathList)
-//				.map(new Function<String, Boolean>() {
-//					@Override
-//					public Boolean apply(String path) throws Exception {
-//						File file = new File(path);
-//						if(file.isDirectory()){
-//							throw new RuntimeException("This path does not refer to a file");
-//						}
-////						if(file.length() < ){
-////
-////						}
-//						return true;
-//					}
-//				}).subscribeOn(Schedulers.io())
-//				.observeOn(AndroidSchedulers.mainThread())
-//				.ignoreElements()
-//				.subscribe(new Action() {
-//					@Override
-//					public void run() throws Exception {
-//						if(listener != null){
-//							listener.onFinish(null);
-//						}
-//					}
-//				});
-//	}
 }

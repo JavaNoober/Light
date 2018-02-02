@@ -251,12 +251,8 @@ public class Light {
 	 * @param url http
 	 * @param listener
 	 */
-	public void compressFromHttp(String url, OnCompressFinishListener listener){
-		compressFromHttp(url, null, listener);
-	}
-
-	public void compressFromHttp(String url, CompressArgs compressArgs, OnCompressFinishListener listener){
-		new ArgumentsAdapter(compressArgs).getCompressProxy(url).compressFromHttp(listener);
+	public void compressFromHttp(String url,OnCompressFinishListener listener){
+		new ArgumentsAdapter().getCompressProxy(url).compressFromHttp(listener);
 	}
 
 	/**
@@ -268,13 +264,8 @@ public class Light {
 	 * @param listener
 	 */
 	public void compressFromHttp(Uri uri, OnCompressFinishListener listener){
-		compressFromHttp(uri, null, listener);
+		new ArgumentsAdapter().getCompressProxy(uri).compressFromHttp(listener);
 	}
-
-	public void compressFromHttp(Uri uri, CompressArgs compressArgs, OnCompressFinishListener listener){
-		new ArgumentsAdapter(compressArgs).getCompressProxy(uri).compressFromHttp(listener);
-	}
-
 
 	public static void setImage(final ImageView imageView, Object imageSource){
 		int[] size = DisplayUtil.getViewSize(imageView);

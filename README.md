@@ -103,14 +103,25 @@ a lightweight image compress framework for Android based on libJpeg.
     Light.getInstance().compress(img, args, outPath);
     Light.getInstance().compress(img, outPath);
     //支持类型Bitmap, Bytes, String, Resource, Uri, Drawable
+
+#### 从网络获取图片
+       
+注意，onCompressFinishListener必须实现，否则会不进行下载，onCompressFinishListener必须实现接口返回值是byte，可以用来保存到file
+       
+        Light.getInstance().compressFromHttp(uri, new OnCompressFinishListener() {
+            @Override
+            public void onFinish(byte[] bytes) {
+                Bitmap bitmap = Light.getInstance().compress(bytes);
+                ...
+            }
+        });
     
 #### 配合RxJava2使用
  关于配合RxJava2使用的类都在RxLight这个类中。
  通过与rxJava的配合，一行代码就能实现从网络下载->压缩->显示，这个过程，非常的方便。
  
  使用方法如下：
-##### 从网络获取资源
- 
+        
  RxLight会自动对图片进行下载 -> 压缩 -> 显示或保存到本地
 ###### 从网络获取资源 -> Bitmap:
     
