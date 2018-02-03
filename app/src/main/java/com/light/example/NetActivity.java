@@ -27,6 +27,9 @@ import java.io.OutputStream;
 import java.util.Locale;
 
 import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class NetActivity extends AppCompatActivity {
 	ImageView ivCompress;
@@ -124,7 +127,9 @@ public class NetActivity extends AppCompatActivity {
 				});
 			}
 		}).start();
-		Flowable.just(uri).compose(RxLight.compressForUriHttp()).subscribe(bitmap -> {
+		Flowable.just(uri).compose(RxLight.compressForUriHttp())
+				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+				.subscribe(bitmap -> {
 			progressDialog.dismiss();
 			ivCompress.setImageBitmap(bitmap);
 			tvInfo1.setText(String.format(Locale.CHINA, info1, bitmap.getHeight(),

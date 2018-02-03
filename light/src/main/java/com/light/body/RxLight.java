@@ -28,7 +28,7 @@ public class RxLight {
 		return new FlowableTransformer<Uri, Bitmap>() {
 			@Override
 			public Publisher<Bitmap> apply(Flowable<Uri> upstream) {
-				Flowable<Bitmap> observable = upstream.flatMap(new Function<Uri, Publisher<Bitmap>>() {
+				return upstream.flatMap(new Function<Uri, Publisher<Bitmap>>() {
 					@Override
 					public Publisher<Bitmap> apply(Uri uri) throws Exception {
 						final byte[] bytes = HttpDownLoader.downloadImage(uri);
@@ -42,7 +42,6 @@ public class RxLight {
 						};
 					}
 				});
-				return observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
 			}
 		};
 	}
@@ -55,7 +54,7 @@ public class RxLight {
 		return new FlowableTransformer<String, Bitmap>() {
 			@Override
 			public Publisher<Bitmap> apply(Flowable<String> upstream) {
-				Flowable<Bitmap> observable = upstream.flatMap(new Function<String, Publisher<Bitmap>>() {
+				return upstream.flatMap(new Function<String, Publisher<Bitmap>>() {
 					@Override
 					public Publisher<Bitmap> apply(String url) throws Exception {
 						final byte[] bytes = HttpDownLoader.downloadImage(url);
@@ -68,7 +67,6 @@ public class RxLight {
 						};
 					}
 				});
-				return observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
 			}
 		};
 	}
@@ -81,7 +79,7 @@ public class RxLight {
 		return new FlowableTransformer<Uri, Boolean>() {
 			@Override
 			public Publisher<Boolean> apply(Flowable<Uri> upstream) {
-				Flowable<Boolean> observable = upstream.flatMap(new Function<Uri, Publisher<Boolean>>() {
+				return upstream.flatMap(new Function<Uri, Publisher<Boolean>>() {
 					@Override
 					public Publisher<Boolean> apply(Uri uri) throws Exception {
 						final byte[] bytes = HttpDownLoader.downloadImage(uri);
@@ -94,7 +92,6 @@ public class RxLight {
 						};
 					}
 				});
-				return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 			}
 		};
 	}
@@ -107,7 +104,7 @@ public class RxLight {
 		return new FlowableTransformer<String, Boolean>() {
 			@Override
 			public Publisher<Boolean> apply(Flowable<String> upstream) {
-				Flowable<Boolean> observable = upstream.flatMap(new Function<String, Publisher<Boolean>>() {
+				return upstream.flatMap(new Function<String, Publisher<Boolean>>() {
 					@Override
 					public Publisher<Boolean> apply(String uri) throws Exception {
 						final byte[] bytes = HttpDownLoader.downloadImage(uri);
@@ -120,7 +117,6 @@ public class RxLight {
 						};
 					}
 				});
-				return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 			}
 		};
 	}
@@ -133,7 +129,7 @@ public class RxLight {
 		return new FlowableTransformer<T, Bitmap>() {
 			@Override
 			public Publisher<Bitmap> apply(Flowable<T> upstream) {
-				Flowable<Bitmap> observable = upstream.flatMap(new Function<T, Publisher<Bitmap>>() {
+				return upstream.flatMap(new Function<T, Publisher<Bitmap>>() {
 					@Override
 					public Publisher<Bitmap> apply(final T t)throws Exception {
 						return new Publisher<Bitmap>() {
@@ -145,7 +141,6 @@ public class RxLight {
 						};
 					}
 				});
-				return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 			}
 		};
 	}
@@ -158,7 +153,7 @@ public class RxLight {
 		return new FlowableTransformer<T, Boolean>() {
 			@Override
 			public Publisher<Boolean> apply(Flowable<T> upstream) {
-				Flowable<Boolean> observable = upstream.flatMap(new Function<T, Publisher<Boolean>>() {
+				return upstream.flatMap(new Function<T, Publisher<Boolean>>() {
 					@Override
 					public Publisher<Boolean> apply(final T t)throws Exception {
 						return new Publisher<Boolean>() {
@@ -170,7 +165,6 @@ public class RxLight {
 						};
 					}
 				});
-				return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 			}
 		};
 	}

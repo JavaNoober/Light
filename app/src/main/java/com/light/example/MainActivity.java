@@ -1,6 +1,5 @@
 package com.light.example;
 
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,15 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.light.body.Light;
-import com.light.body.RxLight;
 import com.light.core.Utils.MemoryComputeUtil;
 import com.light.core.Utils.UriParser;
-import com.light.core.Utils.http.HttpDownLoader;
 
 import java.io.File;
 import java.util.Locale;
 
-import io.reactivex.Flowable;
 
 public class MainActivity extends AppCompatActivity {
 	ImageView ivCompress;

@@ -27,9 +27,10 @@ a lightweight image compress framework for Android based on libJpeg.
        1.1.0 修复从uri获取路径错误的bug;
              增加ignoreSize的设置，以便用于压缩图片保持原尺寸;
              支持配合rxjava2使用;
-       1.1.1 RxLight去除线程切换控制，让开发者自己去指定线程;
-             优化异常提示;
-             
+       1.1.1 优化异常提示;
+       1.1.2 增加Light.getInstance().compressFromHttp方法，从网络获取图片;      
+       1.1.3 RxLight去除线程切换控制，让开发者自己去指定线程;
+             去掉无用类;   
  ### 使用方法: 
    
 	    android {
@@ -40,7 +41,7 @@ a lightweight image compress framework for Android based on libJpeg.
 	    }
 	    
 	    //引入
-	    implementation 'com.noober.light:core:1.1.1'
+	    implementation 'com.noober.light:core:1.1.2'
 	    
 	    //如果要配合rxjava2,加入rxjava2的依赖
 	    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
