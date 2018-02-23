@@ -11,6 +11,8 @@ public class CompressArgs {
 	private int height;
 	private int quality;
 	private boolean ignoreSize;
+	private boolean autoRotation;
+
 	private CompressArgs(){
 
 	}
@@ -35,6 +37,7 @@ public class CompressArgs {
 		private int width;
 		private int height;
 		private int quality;
+		private boolean autoRotation = Light.getInstance().getConfig().isAutoRotation();
 		private boolean ignoreSize = Light.getInstance().getConfig().isNeedIgnoreSize();
 
 		public Builder width(int width) {
@@ -57,12 +60,18 @@ public class CompressArgs {
 			return this;
 		}
 
+		public Builder autoRotation(boolean autoRotation) {
+			this.autoRotation = autoRotation;
+			return this;
+		}
+
 		public CompressArgs build(){
 			CompressArgs args = new CompressArgs();
 			args.width = width;
 			args.height = height;
 			args.quality = quality;
 			args.ignoreSize = ignoreSize;
+			args.autoRotation = autoRotation;
 			return args;
 		}
 	}

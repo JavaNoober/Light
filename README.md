@@ -30,7 +30,9 @@ a lightweight image compress framework for Android based on libJpeg.
        1.1.1 优化异常提示;
        1.1.2 增加Light.getInstance().compressFromHttp方法，从网络获取图片;      
        1.1.3 RxLight去除线程切换控制，让开发者自己去指定线程;
-             去掉无用类;   
+             去掉无用类;
+       1.1.4 增加autoRotation的设置，可以将图片自动旋转为0度, 便于解决三星手机拍照会自动将图片选择的问题;
+
  ### 使用方法: 
    
 	    android {
@@ -58,9 +60,10 @@ a lightweight image compress framework for Android based on libJpeg.
   2.height: 要压缩到的图片的高度，单位px
   3.quality: 压缩质量, 可选范围是0-100。
   4.ignoreSize: 是否要忽略压缩后图片宽高的限制, 如果设为true，压缩的时候会根据原图本身大小进行压缩，设置的width和height就会失效，默认false。
+  5.autoRotation: 是否要将图片自动摆正(例如三星手机拍照后图片会自动旋转，设为true则会自动将图片旋转正确的方向)。
   因为从网络下载图片保存到本地，中间默认会自动压缩图片，如果不想对图片进行压缩，并保持宽高的话,设置如下参数即可：
   
-    CompressArgs args = new CompressArgs.Builder().quality(100).ignoreSize(true).build();
+    CompressArgs args = new CompressArgs.Builder().quality(100).ignoreSize(true).autoRotation(true).build();
   
  
  ##### 默认参数：

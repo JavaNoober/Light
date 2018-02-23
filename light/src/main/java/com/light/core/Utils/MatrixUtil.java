@@ -19,28 +19,46 @@ public class MatrixUtil {
 
 		private Float postScaleX;
 		private Float postScaleY;
-		//旋转角度
-		private Float degrees;
 
-		private Float postDegrees;
+		private Float preScaleX;
+		private Float preScaleY;
+
+		//旋转角度
+		private Float rotate;
+
+		private Float postRotate;
+
+		private Float preRotate;
 		//旋转中心
 		private Float rotateX;
 		private Float rotateY;
 
 		private Float postRotateX;
 		private Float postRotateY;
+
+		private Float preRotateX;
+		private Float preRotateY;
+
 		//平移
 		private Float translateX;
 		private Float translateY;
 
 		private Float postTranslateX;
 		private Float postTranslateY;
+
+		private Float preTranslateX;
+		private Float preTranslateY;
+
 		//倾斜比例
 		private Float skewX;
 		private Float skewY;
 
 		private Float postSkewX;
 		private Float postSkewY;
+
+		private Float preSkewX;
+		private Float preSkewY;
+
 		private Bitmap bitmap;
 		private boolean recycle = true;
 
@@ -56,25 +74,43 @@ public class MatrixUtil {
 			return this;
 		}
 
+		public Build preScale(float preScaleX, float preScaleY){
+			this.preScaleX = preScaleX;
+			this.preScaleY = preScaleY;
+			return this;
+		}
+
 		public Build rotate(float degrees){
-			this.degrees = degrees;
+			this.rotate = degrees;
 			return this;
 		}
 
 		public Build postRotate(float postDegrees){
-			this.postDegrees = postDegrees;
+			this.postRotate = postDegrees;
+			return this;
+		}
+
+		public Build preRotate(float preRotate){
+			this.preRotate = preRotate;
+			return this;
+		}
+
+		public Build preRotate(float preRotate, float preRotateX, float preRotateY){
+			this.preRotate = preRotate;
+			this.preRotateX = preRotateX;
+			this.preRotateY = preRotateY;
 			return this;
 		}
 
 		public Build rotate(float degrees, float rotateX, float rotateY){
-			this.degrees = degrees;
+			this.rotate = degrees;
 			this.rotateX = rotateX;
 			this.rotateY = rotateY;
 			return this;
 		}
 
 		public Build postRotate(float postDegrees, float postRotateX, float postRotateY){
-			this.postDegrees = postDegrees;
+			this.postRotate = postDegrees;
 			this.postRotateX = postRotateX;
 			this.postRotateY = postRotateY;
 			return this;
@@ -92,6 +128,12 @@ public class MatrixUtil {
 			return this;
 		}
 
+		public Build preTranslate(float preTranslateX, float preTranslateY){
+			this.preTranslateX = preTranslateX;
+			this.preTranslateY = preTranslateY;
+			return this;
+		}
+
 		public Build skew(float skewX, float skewY){
 			this.skewX = skewX;
 			this.skewY = skewY;
@@ -101,6 +143,12 @@ public class MatrixUtil {
 		public Build postSkew(float postSkewX, float postSkewY){
 			this.postSkewX = postSkewX;
 			this.postSkewY = postSkewY;
+			return this;
+		}
+
+		public Build preSkew(float preSkewX, float preSkewY){
+			this.preSkewX = preSkewX;
+			this.preSkewY = preSkewY;
 			return this;
 		}
 
@@ -134,18 +182,45 @@ public class MatrixUtil {
 				width = (int) (width * postScaleX);
 				height = (int) (height * postScaleY);
 			}
-			if(degrees != null){
-				matrix.setRotate(degrees);
+
+			if(preScaleX != null && preScaleY != null){
+				matrix.preScale(preScaleX, preScaleY);
+				width = (int) (width * preScaleX);
+				height = (int) (height * preScaleY);
 			}
-			if(postDegrees != null){
-				matrix.postRotate(postDegrees);
+
+			if(rotate != null){
+				matrix.setRotate(rotate);
 			}
-			if(degrees != null && rotateX != null && rotateY != null){
-				matrix.setRotate(degrees, rotateX, rotateY);
+			if(postRotate != null){
+				matrix.postRotate(postRotate);
+				if(postRotate == 90 || postRotate == 270){
+					int tmp = width;
+					width = height;
+					height = tmp;
+				}
 			}
-			if(postDegrees != null && postRotateX != null && postRotateY != null){
-				matrix.postRotate(postDegrees, postRotateX, postRotateY);
+			if(preRotate != null){
+				matrix.preRotate(preRotate);
+				if(preRotate == 90 || preRotate == 270){
+					int tmp = width;
+					width = height;
+					height = tmp;
+				}
 			}
+
+			if(rotate != null && rotateX != null && rotateY != null){
+				matrix.setRotate(rotate, rotateX, rotateY);
+			}
+
+			if(postRotate != null && postRotateX != null && postRotateY != null){
+				matrix.postRotate(postRotate, postRotateX, postRotateY);
+			}
+
+			if(rotate != null && preRotateX != null && preRotateY != null){
+				matrix.preRotate(rotate, preRotateX, preRotateY);
+			}
+
 			if(translateX != null && translateY != null){
 				matrix.setTranslate(translateX, translateY);
 				width = (int) (width + translateX);
@@ -156,15 +231,26 @@ public class MatrixUtil {
 				width = (int) (width + postTranslateX);
 				height = (int) (height + postTranslateY);
 			}
+
+			if(preTranslateX != null && preTranslateY != null){
+				matrix.preTranslate(preTranslateX, preTranslateY);
+				width = (int) (width + preTranslateX);
+				height = (int) (height + preTranslateY);
+			}
+
 			if(skewX != null && skewY != null){
 				matrix.setSkew(skewX, skewY);
 			}
+
 			if(postSkewX != null && postSkewY != null){
 				matrix.postSkew(postSkewX, postSkewY);
 			}
-			Bitmap afterBitmap = Bitmap.createBitmap(width, height, bitmap.getConfig());
-			Canvas canvas = new Canvas(afterBitmap);
-			canvas.drawBitmap(bitmap, matrix, paint);
+
+			if(preSkewX != null && preSkewY != null){
+				matrix.preSkew(preSkewX, preSkewY);
+			}
+
+			Bitmap afterBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 			if(recycle){
 				bitmap.recycle();
 			}

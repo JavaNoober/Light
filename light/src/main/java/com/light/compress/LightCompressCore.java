@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.Log;
 
+import com.light.core.Utils.L;
+
 /**
  * Created by xiaoqi on 2017/11/21
  */
@@ -33,7 +35,7 @@ public class LightCompressCore {
 				return saveBitmap(bit, quality, fileName);
 			}finally {
 				long time = System.currentTimeMillis() - startTime;
-				Log.e("Light", "JNI time:" + time);
+				L.e("Light", "JNI time:" + time);
 			}
 		}else {
 			Bitmap result = null;
@@ -47,7 +49,7 @@ public class LightCompressCore {
 				long time = System.currentTimeMillis() - startTime;
 				if(result != null){
 					result.recycle();
-					Log.e("Light", "JNI time:" + time);
+					L.e("Light", "JNI time:" + time);
 				}
 			}
 		}

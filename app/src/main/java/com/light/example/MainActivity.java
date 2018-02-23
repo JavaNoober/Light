@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.light.body.Light;
+import com.light.body.LightConfig;
 import com.light.core.Utils.MemoryComputeUtil;
 import com.light.core.Utils.UriParser;
 
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		LightConfig config = new LightConfig();
+		config.setAutoRotation(true);
+		Light.getInstance().setConfig(config);
 		ivCompress = findViewById(R.id.image_compress);
 		ivImage = findViewById(R.id.image);
 		tvInfo = findViewById(R.id.tv_info);
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 			options.inJustDecodeBounds = true;
 			BitmapFactory.decodeFile(path, options);
 			Bitmap compressBitmap = Light.getInstance().compress(imageUri);
+			Light.getInstance().compress(imageUri, path1);
 			ivCompress.setImageBitmap(compressBitmap);
 			Bitmap bitmap2 = BitmapFactory.decodeFile(path);
 			ivImage.setImageBitmap(bitmap2);

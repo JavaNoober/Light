@@ -24,6 +24,8 @@ public class LightConfig implements Serializable{
 
 	private boolean needIgnoreSize = false;
 
+	private boolean autoRotation = false;
+
 	public static boolean isDebug = true;
 
 	public LightConfig(){
@@ -79,5 +81,13 @@ public class LightConfig implements Serializable{
 
 	public void setNeedIgnoreSize(boolean needIgnoreSize) {
 		this.needIgnoreSize = needIgnoreSize;
+	}
+
+	public boolean isAutoRotation() {
+		return autoRotation;
+	}
+
+	public void setAutoRotation(boolean autoRotation) {
+		this.autoRotation = autoRotation;
 	}
 }

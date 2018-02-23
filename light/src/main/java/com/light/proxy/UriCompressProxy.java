@@ -28,15 +28,18 @@ public class UriCompressProxy implements ICompressProxy {
 	private ICompressProxy compressProxy = null;
 	private OnCompressFinishListener compressFinishListener = null;
 	private boolean needIgnoreSize;
+	private boolean autoRotation;
 
 	@Override
 	public boolean compress(String outPath) {
 		if(UriParser.isLocalFileUri(uri)){
 			String filePath = UriParser.getPathFromFileUri(uri);
-			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
+			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality)
+					.autoRotation(autoRotation).path(filePath).build();
 		}else if(UriParser.isLocalContentUri(uri)){
 			String filePath = UriParser.getPathFromContentUri(uri);
-			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).path(filePath).build();
+			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality)
+					.autoRotation(autoRotation).path(filePath).build();
 		}else if(UriParser.isLocalAnroidResourceUri(uri)){
 			try {
 				InputStream input = Light.getInstance().getContext().getContentResolver().openInputStream(uri);
@@ -72,11 +75,11 @@ public class UriCompressProxy implements ICompressProxy {
 		if(UriParser.isLocalFileUri(uri)){
 			String filePath = UriParser.getPathFromFileUri(uri);
 			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).ignoreSize(needIgnoreSize)
-					.path(filePath).build();
+					.path(filePath).autoRotation(autoRotation).build();
 		}else if(UriParser.isLocalContentUri(uri)){
 			String filePath = UriParser.getPathFromContentUri(uri);
 			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).ignoreSize(needIgnoreSize)
-					.path(filePath).build();
+					.path(filePath).autoRotation(autoRotation).build();
 		}else if(UriParser.isLocalAnroidResourceUri(uri)){
 			try {
 				InputStream input = Light.getInstance().getContext().getContentResolver().openInputStream(uri);
@@ -104,6 +107,7 @@ public class UriCompressProxy implements ICompressProxy {
 		private int height;
 		private int quality;
 		private boolean ignoreSize = Light.getInstance().getConfig().isNeedIgnoreSize();
+		private boolean autoRotation = Light.getInstance().getConfig().isAutoRotation();
 		private OnCompressFinishListener compressFinishListener;
 
 		public Builder uri(Uri uri) {
@@ -131,6 +135,11 @@ public class UriCompressProxy implements ICompressProxy {
 			return this;
 		}
 
+		public Builder autoRotation(boolean autoRotation) {
+			this.autoRotation = autoRotation;
+			return this;
+		}
+
 		public Builder compressListener(OnCompressFinishListener compressFinishListener) {
 			this.compressFinishListener = compressFinishListener;
 			return this;
@@ -146,6 +155,7 @@ public class UriCompressProxy implements ICompressProxy {
 			proxy.uri = uri;
 			proxy.quality = quality;
 			proxy.needIgnoreSize = ignoreSize;
+			proxy.autoRotation = autoRotation;
 			proxy.compressFinishListener = compressFinishListener;
 			return proxy;
 		}

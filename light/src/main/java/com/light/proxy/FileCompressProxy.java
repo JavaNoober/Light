@@ -7,6 +7,7 @@ import android.os.Looper;
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.LightCompressEngine;
+import com.light.core.Utils.DegreeHelper;
 import com.light.core.Utils.MatrixUtil;
 import com.light.core.Utils.http.HttpDownLoader;
 import com.light.core.listener.ICompressEngine;
@@ -28,6 +29,7 @@ public class FileCompressProxy implements ICompressProxy {
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
 	private boolean needIgnoreSize;
+	private boolean autoRotation;
 
 	public FileCompressProxy(){
 		lightConfig = Light.getInstance().getConfig();
@@ -68,7 +70,20 @@ public class FileCompressProxy implements ICompressProxy {
 		Bitmap result = compressEngine.compress2Bitmap(path, resultWidth, resultHeight);
 		float scaleSize = MatrixUtil.getScale(resultWidth, resultHeight, result.getWidth(), result.getHeight());
 		if(scaleSize < 1){
-			return new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result).build();
+			MatrixUtil.Build build = new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result);
+			if(autoRotation){
+				int degree = DegreeHelper.getBitmapDegree(path);
+				if(degree != 0){
+					build.preRotate(degree);
+				}
+			}
+			return build.build();
+		}
+		if(autoRotation){
+			int degree = DegreeHelper.getBitmapDegree(path);
+			if(degree != 0){
+				return new MatrixUtil.Build().preRotate(degree).bitmap(result).build();
+			}
 		}
 		return result;
 	}
@@ -88,6 +103,7 @@ public class FileCompressProxy implements ICompressProxy {
 		private int height;
 		private int quality;
 		private boolean ignoreSize;
+		private boolean autoRotation;
 
 		public Builder path(String path) {
 			this.path = path;
@@ -114,6 +130,11 @@ public class FileCompressProxy implements ICompressProxy {
 			return this;
 		}
 
+		public Builder autoRotation(boolean autoRotation) {
+			this.autoRotation = autoRotation;
+			return this;
+		}
+
 		public FileCompressProxy build(){
 			if(path == null || !new File(path).exists()){
 				throw new RuntimeException("image path is wrong");
@@ -124,6 +145,7 @@ public class FileCompressProxy implements ICompressProxy {
 			proxy.path = path;
 			proxy.quality = quality;
 			proxy.needIgnoreSize = ignoreSize;
+			proxy.autoRotation = autoRotation;
 			return proxy;
 		}
 	}
