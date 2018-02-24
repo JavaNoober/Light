@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		LightConfig config = new LightConfig();
 		config.setAutoRotation(true);
+		config.setAutoRecycle(true);
 		Light.getInstance().setConfig(config);
 		ivCompress = findViewById(R.id.image_compress);
 		ivImage = findViewById(R.id.image);

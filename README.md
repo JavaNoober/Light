@@ -31,7 +31,10 @@ a lightweight image compress framework for Android based on libJpeg.
        1.1.2 增加Light.getInstance().compressFromHttp方法，从网络获取图片;      
        1.1.3 RxLight去除线程切换控制，让开发者自己去指定线程;
              去掉无用类;
-       1.1.4 增加autoRotation的设置，可以将图片自动旋转为0度, 便于解决三星手机拍照会自动将图片选择的问题;
+       1.1.4 增加autoRotation的设置(只有压缩从本地读取图片有用，其他情况无效)，可以将图片自动旋转为0度, 便于解决三星手机拍照会自动将图片选择的问题;
+       1.1.5 优化部分代码，解决bug;
+             增加autoRecycle的设置(只有压缩bitmap和压缩byte类型的图片有用，其他类型图片无效)，开启该设置代表自动会将传入的bitmap或者bytes进行内存回收;
+             
 
  ### 使用方法: 
    
@@ -43,7 +46,7 @@ a lightweight image compress framework for Android based on libJpeg.
 	    }
 	    
 	    //引入
-	    implementation 'com.noober.light:core:1.1.2'
+	    implementation 'com.noober.light:core:1.1.5'
 	    
 	    //如果要配合rxjava2,加入rxjava2的依赖
 	    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
@@ -60,10 +63,12 @@ a lightweight image compress framework for Android based on libJpeg.
   2.height: 要压缩到的图片的高度，单位px
   3.quality: 压缩质量, 可选范围是0-100。
   4.ignoreSize: 是否要忽略压缩后图片宽高的限制, 如果设为true，压缩的时候会根据原图本身大小进行压缩，设置的width和height就会失效，默认false。
-  5.autoRotation: 是否要将图片自动摆正(例如三星手机拍照后图片会自动旋转，设为true则会自动将图片旋转正确的方向)。
+  5.autoRotation: 是否要将图片自动摆正,只有压缩从本地读取图片有用，其他情况无效(例如三星手机拍照后图片会自动旋转，设为true则会自动将图片旋转正确的方向)。
+  6.autoRecycle: 是否需要自动将传入的bitmap或者bytes进行内存回收，只有压缩bitmap和压缩byte类型的图片有用，其他类型图片无效
   因为从网络下载图片保存到本地，中间默认会自动压缩图片，如果不想对图片进行压缩，并保持宽高的话,设置如下参数即可：
   
-    CompressArgs args = new CompressArgs.Builder().quality(100).ignoreSize(true).autoRotation(true).build();
+    CompressArgs args = new CompressArgs.Builder().quality(100).ignoreSize(true).autoRotation(true)
+    .autoRecycle(true).build();
   
  
  ##### 默认参数：

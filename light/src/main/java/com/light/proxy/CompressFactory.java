@@ -21,52 +21,25 @@ public class CompressFactory {
 		ICompressProxy proxy;
 		switch (compressCategory){
 			case Uri:
-				if(compressArgs == null){
-					proxy = new UriCompressProxy.Builder().uri((Uri) object).build();
-				}else {
-					proxy = new UriCompressProxy.Builder().height(compressArgs.getHeight()).width(compressArgs.getWidth())
-							.quality(compressArgs.getQuality()).uri((Uri) object).build();
-				}
+				proxy = new UriCompressProxy.Builder().compressArgs(compressArgs).uri((Uri) object).build();
 				break;
 			case File:
-				if(compressArgs == null){
-					proxy = new FileCompressProxy.Builder().path((String) object).build();
-				}else {
-					proxy = new FileCompressProxy.Builder().height(compressArgs.getHeight()).width(compressArgs.getWidth())
-							.quality(compressArgs.getQuality()).path((String) object).build();
-				}
+				proxy = new FileCompressProxy.Builder().compressArgs(compressArgs).path((String) object).build();
 				break;
 			case Bytes:
-				if(compressArgs == null){
-					proxy = new BytesCompressProxy.Builder().bytes((byte[]) object).build();
-				}else {
-					proxy = new BytesCompressProxy.Builder().height(compressArgs.getHeight()).width(compressArgs.getWidth())
-							.quality(compressArgs.getQuality()).bytes((byte[]) object).build();
-				}
+				proxy = new BytesCompressProxy.Builder().compressArgs(compressArgs).bytes((byte[]) object).build();
 				break;
 			case Bitmap:
-				if(compressArgs == null){
-					proxy = new BitmapCompressProxy.Builder().bitmap((Bitmap) object).build();
-				}else {
-					proxy = new BitmapCompressProxy.Builder().height(compressArgs.getHeight()).width(compressArgs.getWidth())
-							.quality(compressArgs.getQuality()).bitmap((Bitmap) object).build();
-				}
+				proxy = new BitmapCompressProxy.Builder().compressArgs(compressArgs).bitmap((Bitmap) object).build();
 				break;
 			case Resource:
 				ResourcesCompressProxy.Builder builder = new ResourcesCompressProxy.Builder();
-
-				//TODo test
 				if(object instanceof Drawable){
 					builder.drawable((Drawable) object);
 				}else {
 					builder.resource((int) object);
 				}
-
-				if(compressArgs == null){
-					proxy = builder.build();
-				}else {
-					proxy = builder.height(compressArgs.getHeight()).width(compressArgs.getWidth()).build();
-				}
+				proxy = builder.compressArgs(compressArgs).build();
 				break;
 			default:
 				proxy = null;

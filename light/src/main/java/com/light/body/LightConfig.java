@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by xiaoqi on 2017/11/21
  */
 
-public class LightConfig implements Serializable{
+public class LightConfig implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,9 +26,11 @@ public class LightConfig implements Serializable{
 
 	private boolean autoRotation = false;
 
+	private boolean autoRecycle = false;
+
 	public static boolean isDebug = true;
 
-	public LightConfig(){
+	public LightConfig() {
 		maxWidth = DisplayUtil.getScreenWidth(Light.getInstance().getContext());
 		maxHeight = DisplayUtil.getScreenHeight(Light.getInstance().getContext());
 	}
@@ -89,5 +91,13 @@ public class LightConfig implements Serializable{
 
 	public void setAutoRotation(boolean autoRotation) {
 		this.autoRotation = autoRotation;
+	}
+
+	public boolean isAutoRecycle() {
+		return autoRecycle;
+	}
+
+	public void setAutoRecycle(boolean autoRecycle) {
+		this.autoRecycle = autoRecycle;
 	}
 }

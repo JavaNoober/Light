@@ -12,9 +12,17 @@ public class CompressArgs {
 	private int quality;
 	private boolean ignoreSize;
 	private boolean autoRotation;
+	private boolean autoRecycle;
 
 	private CompressArgs(){
 
+	}
+
+	public static CompressArgs getDefaultArgs(){
+		LightConfig config = Light.getInstance().getConfig();
+		return new Builder().width(config.getMaxWidth()).height(config.getMaxWidth())
+				.quality(config.getDefaultQuality()).ignoreSize(config.isNeedIgnoreSize())
+				.autoRecycle(config.isAutoRecycle()).autoRotation(config.isAutoRotation()).build();
 	}
 
 	public int getWidth() {
@@ -33,12 +41,21 @@ public class CompressArgs {
 		return ignoreSize;
 	}
 
+	public boolean isAutoRotation() {
+		return autoRotation;
+	}
+
+	public boolean isAutoRecycle() {
+		return autoRecycle;
+	}
+
 	public static class Builder {
 		private int width;
 		private int height;
 		private int quality;
 		private boolean autoRotation = Light.getInstance().getConfig().isAutoRotation();
 		private boolean ignoreSize = Light.getInstance().getConfig().isNeedIgnoreSize();
+		private boolean autoRecycle = Light.getInstance().getConfig().isAutoRecycle();
 
 		public Builder width(int width) {
 			this.width = width;
@@ -65,6 +82,11 @@ public class CompressArgs {
 			return this;
 		}
 
+		public Builder autoRecycle(boolean autoRecycle) {
+			this.autoRecycle = autoRecycle;
+			return this;
+		}
+
 		public CompressArgs build(){
 			CompressArgs args = new CompressArgs();
 			args.width = width;
@@ -72,6 +94,7 @@ public class CompressArgs {
 			args.quality = quality;
 			args.ignoreSize = ignoreSize;
 			args.autoRotation = autoRotation;
+			args.autoRecycle = autoRecycle;
 			return args;
 		}
 	}

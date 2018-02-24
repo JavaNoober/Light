@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Looper;
 
+import com.light.body.CompressArgs;
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.LightCompressEngine;
@@ -23,13 +24,9 @@ import java.io.File;
 public class FileCompressProxy implements ICompressProxy {
 
 	private String path;
-	private int width;
-	private int height;
-	private int quality;
 	private LightConfig lightConfig;
 	private ICompressEngine compressEngine;
-	private boolean needIgnoreSize;
-	private boolean autoRotation;
+	private CompressArgs compressArgs;
 
 	public FileCompressProxy(){
 		lightConfig = Light.getInstance().getConfig();
@@ -38,27 +35,35 @@ public class FileCompressProxy implements ICompressProxy {
 
 	@Override
 	public boolean compress(String outPath) {
+		int quality = compressArgs.getQuality();
 		if(quality <= 0 || quality > 100){
 			quality = lightConfig.getDefaultQuality();
 		}
 		if(outPath == null){
 			outPath = lightConfig.getOutputRootDir();
 		}
-		return compressEngine.compress2File(compress(), outPath, quality);
+		Bitmap bitmap = compress();
+		try {
+			return compressEngine.compress2File(bitmap, outPath, quality);
+		}finally {
+			if(bitmap != null && !bitmap.isRecycled()){
+				bitmap.recycle();
+			}
+		}
 	}
 
 	@Override
 	public Bitmap compress() {
 		int resultWidth;
 		int resultHeight;
-		if(!needIgnoreSize && width > 0 && height >0){
-			resultWidth = width;
-			resultHeight = height;
+		if(!compressArgs.isIgnoreSize() && compressArgs.getWidth() > 0 && compressArgs.getHeight() >0){
+			resultWidth = compressArgs.getWidth();
+			resultHeight = compressArgs.getHeight();
 		}else {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
 			BitmapFactory.decodeFile(path, options);
-			if(needIgnoreSize){
+			if(compressArgs.isIgnoreSize()){
 				resultWidth = options.outWidth;
 				resultHeight = options.outHeight;
 			}else {
@@ -71,7 +76,7 @@ public class FileCompressProxy implements ICompressProxy {
 		float scaleSize = MatrixUtil.getScale(resultWidth, resultHeight, result.getWidth(), result.getHeight());
 		if(scaleSize < 1){
 			MatrixUtil.Build build = new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result);
-			if(autoRotation){
+			if(compressArgs.isAutoRotation()){
 				int degree = DegreeHelper.getBitmapDegree(path);
 				if(degree != 0){
 					build.preRotate(degree);
@@ -79,7 +84,7 @@ public class FileCompressProxy implements ICompressProxy {
 			}
 			return build.build();
 		}
-		if(autoRotation){
+		if(compressArgs.isAutoRotation()){
 			int degree = DegreeHelper.getBitmapDegree(path);
 			if(degree != 0){
 				return new MatrixUtil.Build().preRotate(degree).bitmap(result).build();
@@ -99,39 +104,15 @@ public class FileCompressProxy implements ICompressProxy {
 
 	public static class Builder {
 		private String path;
-		private int width;
-		private int height;
-		private int quality;
-		private boolean ignoreSize;
-		private boolean autoRotation;
+		private CompressArgs compressArgs;
 
 		public Builder path(String path) {
 			this.path = path;
 			return this;
 		}
 
-		public Builder width(int width) {
-			this.width = width;
-			return this;
-		}
-
-		public Builder height(int height) {
-			this.height = height;
-			return this;
-		}
-
-		public Builder quality(int quality) {
-			this.quality = quality;
-			return this;
-		}
-
-		public Builder ignoreSize(boolean ignoreSize) {
-			this.ignoreSize = ignoreSize;
-			return this;
-		}
-
-		public Builder autoRotation(boolean autoRotation) {
-			this.autoRotation = autoRotation;
+		public Builder compressArgs(CompressArgs compressArgs) {
+			this.compressArgs = compressArgs;
 			return this;
 		}
 
@@ -140,12 +121,12 @@ public class FileCompressProxy implements ICompressProxy {
 				throw new RuntimeException("image path is wrong");
 			}
 			FileCompressProxy proxy = new FileCompressProxy();
-			proxy.width = width;
-			proxy.height = height;
 			proxy.path = path;
-			proxy.quality = quality;
-			proxy.needIgnoreSize = ignoreSize;
-			proxy.autoRotation = autoRotation;
+			if(compressArgs == null){
+				proxy.compressArgs = CompressArgs.getDefaultArgs();
+			}else {
+				proxy.compressArgs = compressArgs;
+			}
 			return proxy;
 		}
 	}

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 
+import com.light.body.CompressArgs;
 import com.light.body.Light;
 import com.light.core.Utils.UriParser;
 import com.light.core.Utils.http.HttpDownLoader;
@@ -22,29 +23,23 @@ import java.io.InputStream;
 public class UriCompressProxy implements ICompressProxy {
 
 	private Uri uri;
-	private int width;
-	private int height;
-	private int quality;
 	private ICompressProxy compressProxy = null;
 	private OnCompressFinishListener compressFinishListener = null;
-	private boolean needIgnoreSize;
-	private boolean autoRotation;
+	private CompressArgs compressArgs;
 
 	@Override
 	public boolean compress(String outPath) {
 		if(UriParser.isLocalFileUri(uri)){
 			String filePath = UriParser.getPathFromFileUri(uri);
-			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality)
-					.autoRotation(autoRotation).path(filePath).build();
+			compressProxy = new FileCompressProxy.Builder().compressArgs(compressArgs).path(filePath).build();
 		}else if(UriParser.isLocalContentUri(uri)){
 			String filePath = UriParser.getPathFromContentUri(uri);
-			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality)
-					.autoRotation(autoRotation).path(filePath).build();
+			compressProxy = new FileCompressProxy.Builder().compressArgs(compressArgs).path(filePath).build();
 		}else if(UriParser.isLocalAnroidResourceUri(uri)){
 			try {
 				InputStream input = Light.getInstance().getContext().getContentResolver().openInputStream(uri);
 				Bitmap bitmap = BitmapFactory.decodeStream(input);
-				compressProxy = new BitmapCompressProxy.Builder().quality(quality).width(width).height(height).bitmap(bitmap).build();
+				compressProxy = new BitmapCompressProxy.Builder().compressArgs(compressArgs).bitmap(bitmap).build();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -74,18 +69,15 @@ public class UriCompressProxy implements ICompressProxy {
 
 		if(UriParser.isLocalFileUri(uri)){
 			String filePath = UriParser.getPathFromFileUri(uri);
-			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).ignoreSize(needIgnoreSize)
-					.path(filePath).autoRotation(autoRotation).build();
+			compressProxy = new FileCompressProxy.Builder().compressArgs(compressArgs).path(filePath).build();
 		}else if(UriParser.isLocalContentUri(uri)){
 			String filePath = UriParser.getPathFromContentUri(uri);
-			compressProxy = new FileCompressProxy.Builder().width(width).height(height).quality(quality).ignoreSize(needIgnoreSize)
-					.path(filePath).autoRotation(autoRotation).build();
+			compressProxy = new FileCompressProxy.Builder().compressArgs(compressArgs).path(filePath).build();
 		}else if(UriParser.isLocalAnroidResourceUri(uri)){
 			try {
 				InputStream input = Light.getInstance().getContext().getContentResolver().openInputStream(uri);
 				Bitmap bitmap = BitmapFactory.decodeStream(input);
-				compressProxy = new BitmapCompressProxy.Builder().width(width).height(height).bitmap(bitmap)
-						.ignoreSize(needIgnoreSize).build();
+				compressProxy = new BitmapCompressProxy.Builder().compressArgs(compressArgs).bitmap(bitmap).build();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -103,11 +95,7 @@ public class UriCompressProxy implements ICompressProxy {
 
 	public static class Builder {
 		private Uri uri;
-		private int width;
-		private int height;
-		private int quality;
-		private boolean ignoreSize = Light.getInstance().getConfig().isNeedIgnoreSize();
-		private boolean autoRotation = Light.getInstance().getConfig().isAutoRotation();
+		private CompressArgs compressArgs;
 		private OnCompressFinishListener compressFinishListener;
 
 		public Builder uri(Uri uri) {
@@ -115,28 +103,8 @@ public class UriCompressProxy implements ICompressProxy {
 			return this;
 		}
 
-		public Builder width(int width) {
-			this.width = width;
-			return this;
-		}
-
-		public Builder height(int height) {
-			this.height = height;
-			return this;
-		}
-
-		public Builder quality(int quality) {
-			this.quality = quality;
-			return this;
-		}
-
-		public Builder ignoreSize(boolean ignoreSize) {
-			this.ignoreSize = ignoreSize;
-			return this;
-		}
-
-		public Builder autoRotation(boolean autoRotation) {
-			this.autoRotation = autoRotation;
+		public Builder compressArgs(CompressArgs compressArgs) {
+			this.compressArgs = compressArgs;
 			return this;
 		}
 
@@ -150,12 +118,12 @@ public class UriCompressProxy implements ICompressProxy {
 				throw new RuntimeException("resId is not exists");
 			}
 			UriCompressProxy proxy = new UriCompressProxy();
-			proxy.width = width;
-			proxy.height = height;
 			proxy.uri = uri;
-			proxy.quality = quality;
-			proxy.needIgnoreSize = ignoreSize;
-			proxy.autoRotation = autoRotation;
+			if(compressArgs == null){
+				proxy.compressArgs = CompressArgs.getDefaultArgs();
+			}else {
+				proxy.compressArgs = compressArgs;
+			}
 			proxy.compressFinishListener = compressFinishListener;
 			return proxy;
 		}
