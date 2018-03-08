@@ -118,7 +118,7 @@ public class FileCompressProxy implements ICompressProxy {
 
 		public FileCompressProxy build(){
 			if(path == null || !new File(path).exists()){
-				throw new RuntimeException("image path is wrong");
+				throw new RuntimeException("This path does not exist.");
 			}
 			FileCompressProxy proxy = new FileCompressProxy();
 			proxy.path = path;
