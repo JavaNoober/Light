@@ -85,6 +85,36 @@ public class Light {
 		return resources;
 	}
 
+
+	public LightBuilder source(Uri uri){
+		return new LightBuilder(uri);
+	}
+
+	public LightBuilder source(File file) {
+		return new LightBuilder(file);
+	}
+
+	public LightBuilder source(byte[] bytes) {
+		return new LightBuilder(bytes);
+	}
+
+	public LightBuilder source(String path) {
+		return new LightBuilder(path);
+	}
+
+	public LightBuilder source(Bitmap bitmap) {
+		return new LightBuilder(bitmap);
+	}
+
+	public LightBuilder source(int resId) {
+		return new LightBuilder(resId);
+	}
+
+	public LightBuilder source(Drawable drawable) {
+		return new LightBuilder(drawable);
+	}
+
+
 	public boolean compress(Uri uri, String outPath){
 		return compressImage(uri, null, outPath);
 	}

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.light.body.CompressArgs;
 import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.Utils.MemoryComputeUtil;
@@ -49,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
 		tvInfo = findViewById(R.id.tv_info);
 		tvInfo1 = findViewById(R.id.tv_info1);
 		tvInfo2 = findViewById(R.id.tv_info2);
+
+//		//Light1.2新增写法：
+//		Bitmap bitmap1 = Light.getInstance().source(imageUri).width(500).height(500).autoRotation(true).compress();
+//		boolean result1 = Light.getInstance().source(imageUri).width(500).height(500).autoRotation(true).compress(path);
+//		CompressArgs args = new CompressArgs.Builder().width(500).height(500).autoRecycle(true).build();
+//		Bitmap bitmap2 = Light.getInstance().source(imageUri).compressArgs(args).compress();
+//		boolean result2 = Light.getInstance().source(imageUri).compressArgs(args).compress(path);
+
 	}
 
 	@Override
