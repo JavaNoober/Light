@@ -89,17 +89,17 @@ public class MainActivity extends AppCompatActivity {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inJustDecodeBounds = true;
 			BitmapFactory.decodeFile(path, options);
-			Bitmap compressBitmap = Light.getInstance().compress(imageUri);
+//			Bitmap compressBitmap = Light.getInstance().compress(imageUri);
 			Light.getInstance().compress(imageUri, path1);
-			ivCompress.setImageBitmap(compressBitmap);
+//			ivCompress.setImageBitmap(compressBitmap);
 			Bitmap bitmap2 = BitmapFactory.decodeFile(path);
 			ivImage.setImageBitmap(bitmap2);
-			tvInfo1.setVisibility(View.VISIBLE);
-			tvInfo2.setVisibility(View.VISIBLE);
-			tvInfo1.setText(String.format(Locale.CHINA, info1, compressBitmap.getHeight(),
-					compressBitmap.getWidth(), MemoryComputeUtil.getMemorySize(compressBitmap), new File(path1).length() / 1024));
-			tvInfo2.setText(String.format(Locale.CHINA, info2, options.outHeight,
-					options.outWidth, MemoryComputeUtil.getMemorySize(bitmap2), new File(path).length() / 1024));
+//			tvInfo1.setVisibility(View.VISIBLE);
+//			tvInfo2.setVisibility(View.VISIBLE);
+//			tvInfo1.setText(String.format(Locale.CHINA, info1, compressBitmap.getHeight(),
+//					compressBitmap.getWidth(), MemoryComputeUtil.getMemorySize(compressBitmap), new File(path1).length() / 1024));
+//			tvInfo2.setText(String.format(Locale.CHINA, info2, options.outHeight,
+//					options.outWidth, MemoryComputeUtil.getMemorySize(bitmap2), new File(path).length() / 1024));
 		}
 
 	}

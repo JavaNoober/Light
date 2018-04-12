@@ -122,8 +122,8 @@ public class LightCompressEngine implements ICompressEngine{
 	@Override
 	public boolean compress2File(Bitmap bitmap, String outputPath, int quality) {
 		if (bitmap.hasAlpha()) {
-			L.e(TAG, "compress by LightCompressCore");
-			return NativeCompressCore.compress(bitmap, outputPath, quality, Bitmap.CompressFormat.PNG);
+			L.e(TAG, "compress by NativeCompressCore");
+			return NativeCompressCore.compress(bitmap, outputPath, quality, Bitmap.CompressFormat.JPEG);
 		} else {
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
 				L.e(TAG, "compress by LightCompressCore");
