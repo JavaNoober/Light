@@ -19,11 +19,16 @@ import android.widget.TextView;
 import com.light.body.CompressArgs;
 import com.light.body.Light;
 import com.light.body.LightConfig;
+import com.light.body.RxLight;
 import com.light.core.Utils.MemoryComputeUtil;
 import com.light.core.Utils.UriParser;
 
 import java.io.File;
 import java.util.Locale;
+
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 	TextView tvInfo1;
 	TextView tvInfo2;
 	Uri imageUri;
-	String path1 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/1.jpg";
+	String path1 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/test/1213131.jpg";
 	final static String info1 = "压缩后:\n高度：%d，宽度：%d，占用内存：%dKB，文件大小：%dKB";
 	final static String info2 = "原图片:\n高度：%d，宽度：%d，占用内存：%dKB，文件大小：%dKB";
 
@@ -50,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
 		tvInfo = findViewById(R.id.tv_info);
 		tvInfo1 = findViewById(R.id.tv_info1);
 		tvInfo2 = findViewById(R.id.tv_info2);
+
+        Flowable.just("http://img52.fooww.com:9999/group5/M01/00/99/ZyjCGlrtH9uEPlSIAAAAAN9Juaw140.jpg")
+                .compose(RxLight.compressFoStringHttp(path1))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {});
+
 
 //		//Light1.2新增写法：
 //		Bitmap bitmap1 = Light.getInstance().source(imageUri).width(500).height(500).autoRotation(true).compress();

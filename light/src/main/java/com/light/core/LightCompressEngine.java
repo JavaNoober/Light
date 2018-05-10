@@ -125,13 +125,13 @@ public class LightCompressEngine implements ICompressEngine{
 			L.e(TAG, "compress by NativeCompressCore");
 			return NativeCompressCore.compress(bitmap, outputPath, quality, Bitmap.CompressFormat.JPEG);
 		} else {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+//			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
 				L.e(TAG, "compress by LightCompressCore");
 				return LightCompressCore.compressBitmap(bitmap, quality, outputPath);
-			} else {
-				L.e(TAG, "compress by NativeCompressCore");
-				return NativeCompressCore.compress(bitmap, outputPath, quality, Bitmap.CompressFormat.JPEG);
-			}
+//			} else {
+//				L.e(TAG, "compress by NativeCompressCore");
+//				return NativeCompressCore.compress(bitmap, outputPath, 100, Bitmap.CompressFormat.JPEG);
+//			}
 		}
 	}
 

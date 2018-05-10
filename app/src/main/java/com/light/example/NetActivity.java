@@ -69,7 +69,7 @@ public class NetActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				progressDialog.show();
-				Uri uri = Uri.parse("https://raw.githubusercontent.com/JavaNoober/Light/master/pic1.jpg");
+				Uri uri = Uri.parse("http://img52.fooww.com:9999/group5/M01/00/99/ZyjCGlrtH9uEPlSIAAAAAN9Juaw140.jpg");
 				showImg(uri);
 			}
 		});
