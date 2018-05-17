@@ -34,7 +34,7 @@ a lightweight image compress framework for Android based on libJpeg.
        1.1.4 增加autoRotation的设置(只有压缩从本地读取图片有用，其他情况无效)，可以将图片自动旋转为0度, 便于解决三星手机拍照会自动将图片选择的问题;
        1.1.5 优化部分代码，解决bug;
              增加autoRecycle的设置(只有压缩bitmap和压缩byte类型的图片有用，其他类型图片无效)，开启该设置代表自动会将传入的bitmap或者bytes进行内存回收;
-             
+       1.1.6 增加compressFileSize的压缩设置，可以设置当大于一定kb大小的图片，才会进行压缩，只对压缩保存到本地的方法有效，对压缩保存到bitmap的方法无效   
 
  ### 使用方法: 
    
@@ -65,6 +65,7 @@ a lightweight image compress framework for Android based on libJpeg.
   4.ignoreSize: 是否要忽略压缩后图片宽高的限制, 如果设为true，压缩的时候会根据原图本身大小进行压缩，设置的width和height就会失效，默认false。
   5.autoRotation: 是否要将图片自动摆正,只有压缩从本地读取图片有用，其他情况无效(例如三星手机拍照后图片会自动旋转，设为true则会自动将图片旋转正确的方向)。
   6.autoRecycle: 是否需要自动将传入的bitmap或者bytes进行内存回收，只有压缩bitmap和压缩byte类型的图片有用，其他类型图片无效
+  7.compressFileSize: 对压缩图片到本地的时候增加文件大小的设置，如果大于此kb大小的图片，则不进行压缩。
   因为从网络下载图片保存到本地，中间默认会自动压缩图片，如果不想对图片进行压缩，并保持宽高的话,设置如下参数即可：
   
     CompressArgs args = new CompressArgs.Builder().quality(100).ignoreSize(true).autoRotation(true)
@@ -89,6 +90,7 @@ a lightweight image compress framework for Android based on libJpeg.
     lightConfig.setMaxHeight(xx);
     lightConfig.setMaxHeight(xx);
     lightConfig.setNeedIgnoreSize(xx);
+    ...
     Light.getInstance().setConfig(lightConfig);
     
     
@@ -153,11 +155,11 @@ a lightweight image compress framework for Android based on libJpeg.
  与上述方法类似，只需要compressForUri() 和 compressForString()传入要保存到的路径即可。同样支持uri和string的网络地址类型。
            
     String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/pic.jpg";
-    Flowable.just(uri).compose(RxLight.compressForUriHttp(path)).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
+    Flowable.just(uri).compose(RxLight.compressForUriHttp(path)).subscribe(result -> {});
     //自定义压缩参数
     CompressArgs args = new CompressArgs();
     ....
-    Flowable.just(uri).compose(RxLight.compressForUriHttp(path, args)).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
+    Flowable.just(uri).compose(RxLight.compressForUriHttp(path, args)).subscribe(result -> {});
         
 ##### 通过本地资源异步压缩
  同样都支持 File,String,Uri,Bytes,Bitmap,DrawableResourceID,Drawable这几种类型

@@ -13,6 +13,7 @@ public class CompressArgs {
 	private boolean ignoreSize;
 	private boolean autoRotation;
 	private boolean autoRecycle;
+    private int compressFileSize = -1;//kb
 
 	private CompressArgs(){
 
@@ -49,10 +50,19 @@ public class CompressArgs {
 		return autoRecycle;
 	}
 
-	public static class Builder {
+    public int getCompressFileSize() {
+        return compressFileSize;
+    }
+
+    public void setCompressFileSize(int compressFileSize) {
+        this.compressFileSize = compressFileSize;
+    }
+
+    public static class Builder {
 		private int width;
 		private int height;
 		private int quality;
+        private int compressFileSize = Light.getInstance().getConfig().getCompressFileSize();
 		private boolean autoRotation = Light.getInstance().getConfig().isAutoRotation();
 		private boolean ignoreSize = Light.getInstance().getConfig().isNeedIgnoreSize();
 		private boolean autoRecycle = Light.getInstance().getConfig().isAutoRecycle();
@@ -87,6 +97,11 @@ public class CompressArgs {
 			return this;
 		}
 
+		public Builder compressFileSize(int compressFileSize){
+		    this.compressFileSize = compressFileSize;
+		    return this;
+        }
+
 		public CompressArgs build(){
 			CompressArgs args = new CompressArgs();
 			args.width = width;
@@ -95,6 +110,7 @@ public class CompressArgs {
 			args.ignoreSize = ignoreSize;
 			args.autoRotation = autoRotation;
 			args.autoRecycle = autoRecycle;
+			args.compressFileSize = compressFileSize;
 			return args;
 		}
 	}

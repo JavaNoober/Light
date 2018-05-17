@@ -12,7 +12,7 @@ public class LightConfig implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int maxFileSize = 500;
+	private int compressFileSize = -1;//单位kb
 
 	private String outputRootDir;
 
@@ -20,7 +20,7 @@ public class LightConfig implements Serializable {
 
 	private int maxHeight;
 
-	private int defaultQuality = 85;
+	private int defaultQuality = 70;
 
 	private boolean needIgnoreSize = false;
 
@@ -35,8 +35,8 @@ public class LightConfig implements Serializable {
 		maxHeight = DisplayUtil.getScreenHeight(Light.getInstance().getContext());
 	}
 
-	public LightConfig setMaxFileSize(int maxFileSize) {
-		this.maxFileSize = maxFileSize;
+	public LightConfig setCompressFileSize(int compressFileSize) {
+		this.compressFileSize = compressFileSize;
 		return this;
 	}
 
@@ -45,8 +45,8 @@ public class LightConfig implements Serializable {
 		return this;
 	}
 
-	public int getMaxFileSize() {
-		return maxFileSize;
+	public int getCompressFileSize() {
+		return compressFileSize;
 	}
 
 	public String getOutputRootDir() {

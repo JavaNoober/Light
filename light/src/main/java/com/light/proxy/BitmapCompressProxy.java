@@ -35,7 +35,7 @@ public class BitmapCompressProxy implements ICompressProxy {
 		if(outPath == null){
 			outPath = lightConfig.getOutputRootDir();
 		}
-		return compressEngine.compress2File(compress(), outPath, quality);
+        return compressEngine.compress2File(compress(), outPath, quality);
 	}
 
 	@Override

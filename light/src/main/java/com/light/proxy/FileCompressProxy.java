@@ -9,6 +9,8 @@ import com.light.body.Light;
 import com.light.body.LightConfig;
 import com.light.core.LightCompressEngine;
 import com.light.core.Utils.DegreeHelper;
+import com.light.core.Utils.FileUtils;
+import com.light.core.Utils.L;
 import com.light.core.Utils.MatrixUtil;
 import com.light.core.Utils.http.HttpDownLoader;
 import com.light.core.listener.ICompressEngine;
@@ -16,6 +18,8 @@ import com.light.core.listener.ICompressProxy;
 import com.light.core.listener.OnCompressFinishListener;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Created by xiaoqi on 2017/11/25
@@ -42,14 +46,28 @@ public class FileCompressProxy implements ICompressProxy {
 		if(outPath == null){
 			outPath = lightConfig.getOutputRootDir();
 		}
-		Bitmap bitmap = compress();
-		try {
-			return compressEngine.compress2File(bitmap, outPath, quality);
-		}finally {
-			if(bitmap != null && !bitmap.isRecycled()){
-				bitmap.recycle();
-			}
-		}
+        int compressFileSize = lightConfig.getCompressFileSize();
+		if(compressArgs.getCompressFileSize() > 0){
+            compressFileSize = compressArgs.getCompressFileSize();
+        }
+
+		if(compressFileSize > 0 && new File(path).length() / 1024 < compressFileSize){
+            try {
+                L.d("copyFile");
+                return FileUtils.copyFile(new File(path), new File(outPath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        Bitmap bitmap = compress();
+        try {
+            return compressEngine.compress2File(bitmap, outPath, quality);
+        }finally {
+            if(bitmap != null && !bitmap.isRecycled()){
+                bitmap.recycle();
+            }
+        }
+
 	}
 
 	@Override
