@@ -34,7 +34,8 @@ a lightweight image compress framework for Android based on libJpeg.
        1.1.4 增加autoRotation的设置(只有压缩从本地读取图片有用，其他情况无效)，可以将图片自动旋转为0度, 便于解决三星手机拍照会自动将图片选择的问题;
        1.1.5 优化部分代码，解决bug;
              增加autoRecycle的设置(只有压缩bitmap和压缩byte类型的图片有用，其他类型图片无效)，开启该设置代表自动会将传入的bitmap或者bytes进行内存回收;
-       1.1.6 增加compressFileSize的压缩设置，可以设置当大于一定kb大小的图片，才会进行压缩，只对压缩保存到本地的方法有效，对压缩保存到bitmap的方法无效   
+       1.1.6 增加compressFileSize的压缩设置，可以设置当大于一定kb大小的图片，才会进行压缩，只对压缩保存到本地的方法有效，对压缩保存到bitmap的方法无效;
+       1.1.7 对gif不支持压缩,否则会   
 
  ### 使用方法: 
    

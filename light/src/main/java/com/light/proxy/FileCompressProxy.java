@@ -59,6 +59,15 @@ public class FileCompressProxy implements ICompressProxy {
                 e.printStackTrace();
             }
         }
+        // gif格式不压缩
+        if(FileUtils.getCompressFormat(new File(path)) == null){
+            try {
+                L.d("copyFile");
+                return FileUtils.copyFile(new File(path), new File(outPath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         Bitmap bitmap = compress();
         try {
             return compressEngine.compress2File(bitmap, outPath, quality);
