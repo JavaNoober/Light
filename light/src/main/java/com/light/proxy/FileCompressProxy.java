@@ -144,7 +144,7 @@ public class FileCompressProxy implements ICompressProxy {
 		}
 
 		public FileCompressProxy build(){
-			if(path == null || !new File(path).exists()){
+			if(path == null){
 				throw new RuntimeException("This path does not exist.");
 			}
 			FileCompressProxy proxy = new FileCompressProxy();

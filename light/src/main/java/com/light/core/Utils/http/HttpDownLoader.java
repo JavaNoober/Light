@@ -34,13 +34,17 @@ public class HttpDownLoader {
     }
 
     public static void downloadImage(Uri uri, OnCompressFinishListener callback) {
-        if (!UriParser.isNetworkUri(uri))
+        if (!UriParser.isNetworkUri(uri)){
+            callback.onError(new Exception("uri is not net uri"));
             return;
+        }
 
         HttpURLConnection connection = obtainHttpURLConnection(uri, MAX_REDIRECTS);
         InputStream is = null;
-        if (connection == null)
+        if (connection == null){
+            callback.onError(new Exception("get connection error"));
             return;
+        }
         try {
             is = connection.getInputStream();
             if (callback != null){
@@ -48,8 +52,10 @@ public class HttpDownLoader {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            callback.onError(e);
         } catch (Exception e) {
             e.printStackTrace();
+            callback.onError(e);
         } finally {
             if (is != null) {
                 try {

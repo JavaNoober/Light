@@ -22,6 +22,7 @@ import com.light.body.LightConfig;
 import com.light.body.RxLight;
 import com.light.core.Utils.MemoryComputeUtil;
 import com.light.core.Utils.UriParser;
+import com.light.core.listener.OnCompressFinishListener;
 
 import java.io.File;
 import java.util.List;
@@ -54,6 +55,30 @@ public class MainActivity extends AppCompatActivity {
 		tvInfo = findViewById(R.id.tv_info);
 		tvInfo1 = findViewById(R.id.tv_info1);
 		tvInfo2 = findViewById(R.id.tv_info2);
+
+		String url = "https://upload.jdcf88.com/test/2018/5/25/15272095511667.jpg";
+		new Thread(() -> {
+			Light.getInstance().compressFromHttp(url, new OnCompressFinishListener() {
+				@Override
+				public void onFinish(byte[] bytes) {
+					runOnUiThread(() -> {
+						if(bytes == null){
+//							photoView.setImageResource(R.drawable.bg_preview_error);
+						}else {
+//							Bitmap bitmap = Light.getInstance().compress(bytes);
+//							cache.put(urls.get(position), bitmap);
+//							photoView.setImageBitmap(bitmap);
+						}
+					});
+				}
+
+				@Override
+				public void onError(Throwable throwable) {
+					throwable.printStackTrace();
+//					photoView.setImageResource(R.drawable.bg_preview_error);
+				}
+			});
+		}).start();
 
 //		//Light1.2新增写法：
 //		Bitmap bitmap1 = Light.getInstance().source(imageUri).width(500).height(500).autoRotation(true).compress();
