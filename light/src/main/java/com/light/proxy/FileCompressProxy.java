@@ -99,7 +99,7 @@ public class FileCompressProxy implements ICompressProxy {
 			}
 
 		}
-		Bitmap result = compressEngine.compress2Bitmap(path, resultWidth, resultHeight);
+		Bitmap result = compressEngine.compress2Bitmap(path, resultWidth, resultHeight, compressArgs.getConfig());
 		float scaleSize = MatrixUtil.getScale(resultWidth, resultHeight, result.getWidth(), result.getHeight());
 		if(scaleSize < 1){
 			MatrixUtil.Build build = new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result);

@@ -52,7 +52,7 @@ public class BitmapCompressProxy implements ICompressProxy {
 			resultWidth = bitmap.getWidth();
 			resultHeight = bitmap.getHeight();
 		}
-		Bitmap result = compressEngine.compress2Bitmap(bitmap, resultWidth, resultHeight);
+		Bitmap result = compressEngine.compress2Bitmap(bitmap, resultWidth, resultHeight, compressArgs.getConfig());
 		if(compressArgs.isAutoRecycle()){
 			bitmap.recycle();
 		}

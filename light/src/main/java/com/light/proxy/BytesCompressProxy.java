@@ -81,7 +81,7 @@ public class BytesCompressProxy implements ICompressProxy {
 				}
 			}
 		}
-		Bitmap result = compressEngine.compress2Bitmap(bytes, resultWidth, resultHeight);
+		Bitmap result = compressEngine.compress2Bitmap(bytes, resultWidth, resultHeight, compressArgs.getConfig());
 		if(compressArgs.isAutoRecycle()){
 			bytes = null;
 		}

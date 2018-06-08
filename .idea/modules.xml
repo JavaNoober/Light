@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Light.iml" filepath="$PROJECT_DIR$/.idea/Light.iml" />
       <module fileurl="file://$PROJECT_DIR$/Light.iml" filepath="$PROJECT_DIR$/Light.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Light.iml" filepath="$PROJECT_DIR$/.idea/Light.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/light/light.iml" filepath="$PROJECT_DIR$/light/light.iml" />

@@ -1,6 +1,8 @@
 package com.light.body;
 
 
+import android.graphics.Bitmap;
+
 /**
  * Created by xiaoqi on 2018/1/10
  */
@@ -14,16 +16,18 @@ public class CompressArgs {
 	private boolean autoRotation;
 	private boolean autoRecycle;
     private int compressFileSize = -1;//kb
+	private Bitmap.Config config;
 
 	private CompressArgs(){
 
 	}
 
-	public static CompressArgs getDefaultArgs(){
+    public static CompressArgs getDefaultArgs(){
 		LightConfig config = Light.getInstance().getConfig();
 		return new Builder().width(config.getMaxWidth()).height(config.getMaxWidth())
 				.quality(config.getDefaultQuality()).ignoreSize(config.isNeedIgnoreSize())
-				.autoRecycle(config.isAutoRecycle()).autoRotation(config.isAutoRotation()).build();
+				.autoRecycle(config.isAutoRecycle()).autoRotation(config.isAutoRotation())
+                .bitmapConfig(config.getBitmapConfig()).build();
 	}
 
 	public int getWidth() {
@@ -54,6 +58,10 @@ public class CompressArgs {
         return compressFileSize;
     }
 
+    public Bitmap.Config getConfig() {
+        return config;
+    }
+
     public void setCompressFileSize(int compressFileSize) {
         this.compressFileSize = compressFileSize;
     }
@@ -66,6 +74,8 @@ public class CompressArgs {
 		private boolean autoRotation = Light.getInstance().getConfig().isAutoRotation();
 		private boolean ignoreSize = Light.getInstance().getConfig().isNeedIgnoreSize();
 		private boolean autoRecycle = Light.getInstance().getConfig().isAutoRecycle();
+        private Bitmap.Config config = Light.getInstance().getConfig().getBitmapConfig();
+
 
 		public Builder width(int width) {
 			this.width = width;
@@ -102,6 +112,11 @@ public class CompressArgs {
 		    return this;
         }
 
+        public Builder bitmapConfig(Bitmap.Config config){
+            this.config = config;
+            return this;
+        }
+
 		public CompressArgs build(){
 			CompressArgs args = new CompressArgs();
 			args.width = width;
@@ -111,6 +126,7 @@ public class CompressArgs {
 			args.autoRotation = autoRotation;
 			args.autoRecycle = autoRecycle;
 			args.compressFileSize = compressFileSize;
+			args.config = config;
 			return args;
 		}
 	}

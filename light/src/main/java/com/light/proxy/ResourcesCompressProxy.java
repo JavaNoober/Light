@@ -71,7 +71,7 @@ public class ResourcesCompressProxy implements ICompressProxy {
 			}
 		}
 		L.i(TAG, "finalWidth:"+resultWidth+" finalHeight:"+resultHeight);
-		Bitmap result = compressEngine.compress2Bitmap(resId, resultWidth, resultHeight);
+		Bitmap result = compressEngine.compress2Bitmap(resId, resultWidth, resultHeight, compressArgs.getConfig());
 		float scaleSize = MatrixUtil.getScale(resultWidth, resultHeight, result.getWidth(), result.getHeight());
 		if(scaleSize < 1){
 			return new MatrixUtil.Build().scale(scaleSize, scaleSize).bitmap(result).build();

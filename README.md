@@ -36,14 +36,15 @@ a lightweight image compress framework for Android based on libJpeg.
              增加autoRecycle的设置(只有压缩bitmap和压缩byte类型的图片有用，其他类型图片无效)，开启该设置代表自动会将传入的bitmap或者bytes进行内存回收;
        1.1.6 增加compressFileSize的压缩设置，可以设置当大于一定kb大小的图片，才会进行压缩，只对压缩保存到本地的方法有效，对压缩保存到bitmap的方法无效;
        1.1.7 默认对gif不支持压缩
-       1.1.9 修复bug   
+       1.1.9 修复bug
+       1.2.0 增加Bitmap.Config的设置，默认是RGB_565，可以在CompressArgs设置，也可以在LightConfig统一配置
 
  ### 使用方法: 
    
 	    android {
 	        ...
 	        ndk {
-	            abiFilters 'armeabi-v7a', 'armeabi', 'x86'
+	            abiFilters 'armeabi-v7a', 'armeabi'
 	        }
 	    }
 	    
@@ -68,10 +69,11 @@ a lightweight image compress framework for Android based on libJpeg.
   5.autoRotation: 是否要将图片自动摆正,只有压缩从本地读取图片有用，其他情况无效(例如三星手机拍照后图片会自动旋转，设为true则会自动将图片旋转正确的方向)。
   6.autoRecycle: 是否需要自动将传入的bitmap或者bytes进行内存回收，只有压缩bitmap和压缩byte类型的图片有用，其他类型图片无效
   7.compressFileSize: 对压缩图片到本地的时候增加文件大小的设置，如果大于此kb大小的图片，则不进行压缩。
+  8.bitmapConfig: 设置bitmap的色彩模式，默认是RGB_565
   因为从网络下载图片保存到本地，中间默认会自动压缩图片，如果不想对图片进行压缩，并保持宽高的话,设置如下参数即可：
   
     CompressArgs args = new CompressArgs.Builder().quality(100).ignoreSize(true).autoRotation(true)
-    .autoRecycle(true).build();
+    .autoRecycle(true).bitmapConfig(Bitmap.Config.ARGB_8888).build();
   
  
  ##### 默认参数：

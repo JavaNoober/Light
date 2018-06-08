@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
 			BitmapFactory.decodeFile(path, options);
 //			Bitmap compressBitmap = Light.getInstance().compress(imageUri);
             CompressArgs args = new CompressArgs.Builder().width(1600)
+                    .bitmapConfig(Bitmap.Config.ARGB_8888)
                     .height(1600).autoRotation(true).compressFileSize(200)
                     .build();
 			Light.getInstance().compress(imageUri, args, path1);

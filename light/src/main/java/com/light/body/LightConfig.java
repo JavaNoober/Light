@@ -1,5 +1,7 @@
 package com.light.body;
 
+import android.graphics.Bitmap;
+
 import com.light.core.Utils.DisplayUtil;
 
 import java.io.Serializable;
@@ -28,7 +30,9 @@ public class LightConfig implements Serializable {
 
 	private boolean autoRecycle = false;
 
-	public static boolean isDebug = true;
+    private Bitmap.Config bitmapConfig = Bitmap.Config.RGB_565;
+
+    public static boolean isDebug = true;
 
 	public LightConfig() {
 		maxWidth = DisplayUtil.getScreenWidth(Light.getInstance().getContext());
@@ -100,4 +104,12 @@ public class LightConfig implements Serializable {
 	public void setAutoRecycle(boolean autoRecycle) {
 		this.autoRecycle = autoRecycle;
 	}
+
+    public Bitmap.Config getBitmapConfig() {
+        return bitmapConfig;
+    }
+
+    public void setConfig(Bitmap.Config bitmapConfig) {
+        this.bitmapConfig = bitmapConfig;
+    }
 }
