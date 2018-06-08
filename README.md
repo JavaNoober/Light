@@ -49,7 +49,7 @@ a lightweight image compress framework for Android based on libJpeg.
 	    }
 	    
 	    //引入
-	    implementation 'com.noober.light:core:1.1.9'
+	    implementation 'com.noober.light:core:1.2.0'
 	    
 	    //如果要配合rxjava2,加入rxjava2的依赖
 	    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
