@@ -5,6 +5,11 @@
 
 a lightweight image compress framework for Android based on libJpeg.
 一个基于libJpeg的压缩图片框架, 支持配合rxjava使用。
+
+### 说明
+这个库主要是用于压缩图片体积，当然也可以压缩bitamp减少内存。但是在显示需要高清晰度的图片的时候，比如icon，背景图，建议还是使用glide picasso等成熟的框架，而需要保存图片文件的时候使用本框架。  
+如果需要对icon 背景图等图片压缩可以通过这个网址： [https://tinypng.com/](https://tinypng.com/)
+
 ### demo效果
  
  先展示一下压缩前后的效果对比，以及文件大小和占用内存的大小
