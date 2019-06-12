@@ -52,13 +52,13 @@ public class UriCompressProxy implements ICompressProxy {
 		return compressProxy.compress(outPath);
 	}
 
-	public void compressFromHttp(OnCompressFinishListener compressFinishListener) {
+	public void compressFromHttp(boolean openDiskCache, OnCompressFinishListener compressFinishListener) {
 		if(UriParser.isNetworkUri(uri)) {
 			if (Looper.getMainLooper() == Looper.myLooper()) {
 				throw new RuntimeException("network uri can't compressed on UI Thread");
 			}
 			if(compressFinishListener != null){
-				HttpDownLoader.downloadImage(uri, compressFinishListener);
+				HttpDownLoader.downloadImage(openDiskCache, uri, compressFinishListener);
 			}
 		}
 	}

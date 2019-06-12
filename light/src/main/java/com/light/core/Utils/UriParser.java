@@ -144,6 +144,10 @@ public class UriParser {
 		return srcUri.getPath();
 	}
 
+	public static String getAbsPath(final Uri srcUri) {
+		return srcUri.toString();
+	}
+
 
 	public static String getPathFromContentUri(final Uri srcUri) {
 		String result = null;

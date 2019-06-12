@@ -43,6 +43,7 @@ a lightweight image compress framework for Android based on libJpeg.
        1.1.7 默认对gif不支持压缩
        1.1.9 修复bug
        1.2.0 增加Bitmap.Config的设置，默认是RGB_565，可以在CompressArgs设置，也可以在LightConfig统一配置
+       1.2.1 网络图片下载增加磁盘缓存
 
  ### 使用方法: 
    
@@ -54,7 +55,7 @@ a lightweight image compress framework for Android based on libJpeg.
 	    }
 	    
 	    //引入
-	    implementation 'com.noober.light:core:1.2.0'
+	    implementation 'com.noober.light:core:1.2.1'
 	    
 	    //如果要配合rxjava2,加入rxjava2的依赖
 	    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
@@ -126,9 +127,9 @@ a lightweight image compress framework for Android based on libJpeg.
 
 #### 从网络获取图片
        
-注意，onCompressFinishListener必须实现，否则会不进行下载，onCompressFinishListener必须实现接口返回值是byte，可以用来保存到file
-       
-        Light.getInstance().compressFromHttp(uri, new OnCompressFinishListener() {
+注意，onCompressFinishListener必须实现，否则会不进行下载，onCompressFinishListener必须实现接口返回值是byte，可以用来保存到file, openDiskCache若为true则开启图片缓存
+        
+        Light.getInstance().compressFromHttp(uri, openDiskCache, new OnCompressFinishListener() {
             @Override
             public void onFinish(byte[] bytes) {
                 Bitmap bitmap = Light.getInstance().compress(bytes);
@@ -145,30 +146,34 @@ a lightweight image compress framework for Android based on libJpeg.
  RxLight会自动对图片进行下载 -> 压缩 -> 显示或保存到本地
 ###### 从网络获取资源 -> Bitmap:
     
+    RxLight.compressForUriHttp()中参数openDiskCache控制是否增加磁盘缓存
+    
     //uri类型的网络资源
-    Flowable.just(uri).compose(RxLight.compressForUriHttp()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
+    Flowable.just(uri).compose(RxLight.compressForUriHttp()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
     List<Uri> urlList = new ArrayList<>();
     ....
-    Flowable.fromIterable(urlList).compose(RxLight.compressForUriHttp()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
+    Flowable.fromIterable(urlList).compose(RxLight.compressForUriHttp()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
     //url类型的网络资源
-    Flowable.just(url).compose(RxLight.compressForStringHttp()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
+    Flowable.just(url).compose(RxLight.compressForStringHttp()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
     List<String> urlList = new ArrayList<>();
     ....
-    Flowable.fromIterable(urlList).compose(RxLight.compressForStringHttp()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
+    Flowable.fromIterable(urlList).compose(RxLight.compressForStringHttp()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
     //或者传入自定义的压缩参数只需要在compressForUriHttp() 和 compressForStringHttp()传入CompressArgs即可
     CompressArgs args = new CompressArgs();
     ....
-    Flowable.just(uri).compose(RxLight.compressForUriHttp(args)).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
+    Flowable.just(uri).compose(RxLight.compressForUriHttp(args)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(bitmap -> ivCompress.setImageBitmap(bitmap));
     
 ###### 从网络获取资源 -> boolean(保存到本地):
  与上述方法类似，只需要compressForUri() 和 compressForString()传入要保存到的路径即可。同样支持uri和string的网络地址类型。
            
+    
+    RxLight.compressForUriHttp(中参数openDiskCache控制是否增加磁盘缓存, path)中参数openDiskCache控制是否增加磁盘缓存
     String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/pic.jpg";
-    Flowable.just(uri).compose(RxLight.compressForUriHttp(path)).subscribe(result -> {});
+    Flowable.just(uri).compose(RxLight.compressForUriHttp(path)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(result -> {});
     //自定义压缩参数
     CompressArgs args = new CompressArgs();
     ....
-    Flowable.just(uri).compose(RxLight.compressForUriHttp(path, args)).subscribe(result -> {});
+    Flowable.just(uri).compose(RxLight.compressForUriHttp(path, args)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(result -> {});
         
 ##### 通过本地资源异步压缩
  同样都支持 File,String,Uri,Bytes,Bitmap,DrawableResourceID,Drawable这几种类型

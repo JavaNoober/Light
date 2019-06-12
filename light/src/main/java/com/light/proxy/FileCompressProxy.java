@@ -120,12 +120,12 @@ public class FileCompressProxy implements ICompressProxy {
 		return result;
 	}
 
-	public void compressFromHttp(OnCompressFinishListener compressFinishListener) {
+	public void compressFromHttp(boolean openDiskCache, OnCompressFinishListener compressFinishListener) {
 		if (Looper.getMainLooper() == Looper.myLooper()) {
 			throw new RuntimeException("network uri can't compressed on UI Thread");
 		}
 		if (compressFinishListener != null) {
-			HttpDownLoader.downloadImage(path, compressFinishListener);
+			HttpDownLoader.downloadImage(openDiskCache, path, compressFinishListener);
 		}
 	}
 

@@ -3,31 +3,18 @@ package com.light.body;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Looper;
 import android.widget.ImageView;
 
 import com.light.core.Utils.ContextUtil;
 import com.light.core.Utils.DisplayUtil;
-import com.light.core.Utils.http.HttpDownLoader;
+import com.light.core.Utils.UriParser;
 import com.light.core.listener.OnCompressFinishListener;
 import com.light.proxy.CompressFactory;
 
 import java.io.File;
-import java.io.IOException;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by xiaoqi on 2017/11/21
@@ -282,7 +269,29 @@ public class Light {
 	 * @param listener
 	 */
 	public void compressFromHttp(String url,OnCompressFinishListener listener){
-		new ArgumentsAdapter().getCompressProxy(url).compressFromHttp(listener);
+		compressFromHttp(url, false, listener);
+	}
+
+	/**
+	 * get image from internet
+	 *
+	 * run on sub thread
+	 *
+	 * @param url http
+	 * @param openDiskCache openDiskCache  enable disk cache
+	 * @param listener
+	 */
+	public void compressFromHttp(String url, boolean openDiskCache, OnCompressFinishListener listener){
+		if(openDiskCache){
+			byte[] bytes = LightCache.getInstance().get(url);
+			if(bytes != null){
+				listener.onFinish(bytes);
+			}else {
+				new ArgumentsAdapter().getCompressProxy(url).compressFromHttp(true, listener);
+			}
+		}else {
+			new ArgumentsAdapter().getCompressProxy(url).compressFromHttp(false, listener);
+		}
 	}
 
 	/**
@@ -294,7 +303,32 @@ public class Light {
 	 * @param listener
 	 */
 	public void compressFromHttp(Uri uri, OnCompressFinishListener listener){
-		new ArgumentsAdapter().getCompressProxy(uri).compressFromHttp(listener);
+		compressFromHttp(uri, false, listener);
+	}
+
+	/**
+	 * get image from internet
+	 *
+	 * run on sub thread
+	 *
+	 * @param uri http
+	 *            @param openDiskCache openDiskCache  enable disk cache
+	 * @param listener
+	 */
+	public void compressFromHttp(Uri uri, boolean openDiskCache, OnCompressFinishListener listener){
+		if(!UriParser.isNetworkUri(uri)){
+			throw new RuntimeException("uri is not networkUri");
+		}
+		if(openDiskCache){
+			byte[] bytes = LightCache.getInstance().get(UriParser.getAbsPath(uri));
+			if(bytes != null){
+				listener.onFinish(bytes);
+			}else {
+				new ArgumentsAdapter().getCompressProxy(uri).compressFromHttp(true, listener);
+			}
+		}else {
+			new ArgumentsAdapter().getCompressProxy(uri).compressFromHttp(false, listener);
+		}
 	}
 
 	public static void setImage(final ImageView imageView, Object imageSource){

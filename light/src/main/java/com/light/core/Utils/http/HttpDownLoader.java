@@ -3,6 +3,7 @@ package com.light.core.Utils.http;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.light.body.LightCache;
 import com.light.core.Utils.UriParser;
 import com.light.core.listener.OnCompressFinishListener;
 
@@ -26,14 +27,14 @@ public class HttpDownLoader {
 
     private static final int TIMEOUT = 30000;
 
-    public static void downloadImage(String url, OnCompressFinishListener callback) {
+    public static void downloadImage(boolean openDiskCache, String url, OnCompressFinishListener callback) {
         if (TextUtils.isEmpty(url))
             return;
         Uri uri = Uri.parse(url);
-        downloadImage(uri, callback);
+        downloadImage(openDiskCache, uri, callback);
     }
 
-    public static void downloadImage(Uri uri, OnCompressFinishListener callback) {
+    public static void downloadImage(boolean openDiskCache, Uri uri, OnCompressFinishListener callback) {
         if (!UriParser.isNetworkUri(uri)){
             callback.onError(new Exception("uri is not net uri"));
             return;
@@ -48,7 +49,11 @@ public class HttpDownLoader {
         try {
             is = connection.getInputStream();
             if (callback != null){
-                callback.onFinish(transformToByteArray(is));
+                byte[] bytes = transformToByteArray(is);
+                if(openDiskCache){
+                    LightCache.getInstance().save(UriParser.getAbsPath(uri), bytes);
+                }
+                callback.onFinish(bytes);
             }
         } catch (IOException e) {
             e.printStackTrace();
