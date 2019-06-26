@@ -44,6 +44,7 @@ a lightweight image compress framework for Android based on libJpeg.
        1.1.9 修复bug
        1.2.0 增加Bitmap.Config的设置，默认是RGB_565，可以在CompressArgs设置，也可以在LightConfig统一配置
        1.2.1 网络图片下载增加磁盘缓存
+       1.2.2 增加arm64-v8a的支持
 
  ### 使用方法: 
    
@@ -51,11 +52,12 @@ a lightweight image compress framework for Android based on libJpeg.
 	        ...
 	        ndk {
 	            abiFilters 'armeabi-v7a', 'armeabi'
+	            //abiFilters 'armeabi-v7a', 'armeabi', 'arm64-v8a' 根据需要选择指令集架构
 	        }
 	    }
 	    
 	    //引入
-	    implementation 'com.noober.light:core:1.2.1'
+	    implementation 'com.noober.light:core:1.2.2'
 	    
 	    //如果要配合rxjava2,加入rxjava2的依赖
 	    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
