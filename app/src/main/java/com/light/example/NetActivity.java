@@ -80,7 +80,7 @@ public class NetActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progressDialog.show();
-                Uri uri = Uri.parse("http://k.zol-img.com.cn/sjbbs/7692/a7691515_s.jpg");
+                Uri uri = Uri.parse("https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png");
                 showImg(uri);
             }
         });
@@ -113,6 +113,9 @@ public class NetActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+                if(!new File(path1).exists()){
+                    return;
                 }
                 runOnUiThread(new Runnable() {
                     @Override
